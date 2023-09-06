@@ -1,3 +1,4 @@
+## Ignorar solo archivos/pacckages que no se estaran exportando a git
 *.egg-info/
 .coverage
 .ipynb_checkpoints
@@ -8,4 +9,6 @@ processed_data/
 __pycache__/
 .env
 .direnv/
+
+# IDE #
 .vscode/
