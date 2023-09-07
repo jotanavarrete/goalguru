@@ -18,5 +18,3 @@ FEATURES = ['avgHomePassAccuLast10Games','avgHomeShotAccuLast10Games',
                     ]
 TARGET = ['homeWins']
 DTYPES_RAW = {}
-
-##################  CONSTANTS_STATSBOMS  #####################
