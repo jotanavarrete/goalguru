@@ -7,7 +7,7 @@ En este codigo, se creara y prepocesara el dataframe
 import numpy as np
 import pandas as pd
 
-from colorama import Fore, Style
+#from colorama import Fore, Style
 
 from sklearn.pipeline import make_pipeline
 from sklearn.compose import ColumnTransformer # make_column_transformer
@@ -44,7 +44,7 @@ def preprocess_features(X: pd.DataFrame) -> np.ndarray:
 
 
 
-    print(Fore.BLUE + "\nPreprocessing features..." + Style.RESET_ALL)
+   # print(Fore.BLUE + "\nPreprocessing features..." + Style.RESET_ALL)
 
     preprocessor = create_preprocessor()
     X_processed = preprocessor.fit_transform(X)
