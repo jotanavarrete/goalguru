@@ -2,18 +2,20 @@
 Esta Seccion es para crear una API y subir el modelo a internet.
 
 """
+## IMPORTANTE: Hayq eue descomentar cierta lineas que tenga ##%
+
 
 import pandas as pd
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 ## Model from soccermatch_package
-#from goalguru.soccermatch_package.preprocessor  import preprocess_features
-#from goalguru.soccermatch_package.registry import load_model
+#% from goalguru.soccermatch_package.preprocessor  import preprocess_features
+#% from goalguru.soccermatch_package.registry import load_model
 
 ## Model from statsbombs_package
-#from goalguru.statsbombs_package.preprocessor  import preprocess_features
-#from goalguru.statsbombs_package.registry import load_model
+#% from goalguru.statsbombs_package.preprocessor  import preprocess_features
+#% from goalguru.statsbombs_package.registry import load_model
 
 
 
@@ -32,7 +34,10 @@ app.add_middleware(
 )
 
 # http://127.0.0.1:8000/predict?pickup_datetime=2012-10-06 12:10:20&pickup_longitude=40.7614327&pickup_latitude=-73.9798156&dropoff_longitude=40.6513111&dropoff_latitude=-73.8803331&passenger_count=2
+
+##%
 """
+
 @app.get("/predict")
 
 def predict(
@@ -77,4 +82,4 @@ def predict(
 def root():
     return {
     'greeting': 'Hello'
-    }  # YOUR CODE HERE
+    }
