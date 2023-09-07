@@ -1,8 +1,7 @@
-# GoalGuru
+# GoalGuru ⚽
 
+Fun Football Forecasting 🔮. By fans, for fans.
 
-'''
-# Welcome to GoalGuru ⚽!
+## App repository
 
-## Fun football forecasting 🔮. By fans, for fans.
-'''
+[https://github.com/jotanavarrete/goalguru_gui](https://github.com/jotanavarrete/goalguru_gui)
