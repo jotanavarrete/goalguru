@@ -128,7 +128,7 @@ def get_results(match_id : int) -> dict:
         dataset = load_processed_data()
         game = dataset[dataset['matchId'] == match_id]
         result = {}
-        res = f"{game.homeTeam[0]} {game.homeScore[0]} - {game.awayTeam[0]} {game.awayScore[0]}"
+        res = f"{game.homeTeam.values[0]} {game.homeScore.values[0]} - {game.awayTeam.values[0]} {game.awayScore.values[0]}"
         result['result'] = res
         save_json(result,path)
         return result
