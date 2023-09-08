@@ -1,5 +1,5 @@
-from goalguru.soccermatch_package import data
-from goalguru.params import *
+from goalguru.soccermatch_package.ml_logic import data
+from goalguru.soccermatch_package.params import *
 from pathlib import Path
 import pandas as pd
 

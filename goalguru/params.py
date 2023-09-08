@@ -10,7 +10,7 @@ LOCAL_REGISTRY_PATH =  os.path.join(os.path.expanduser('~'), "code", "jotanavarr
 
 ##################  CONSTANTS_SOCCMATCH  #####################
 SOCCER_PROJECT = "soccer_match"
-COLUMN_NAMES_RAW = ['teamsData','seasonId', 'dateutc', 'winner', 'wyId', 'competitionId']
+COLUMN_NAMES_RAW = ['teamsData','seasonId', 'dateutc', 'winner', 'wyId', 'competitionId', 'gameweek']
 FEATURES = ['avgHomePassAccuLast10Games','avgHomeShotAccuLast10Games',
                      'avgAwayPassAccuLast10Games','avgAwayShotAccuLast10Games',
                      'homeWRlast10Games', 'awayWRlast10Games',
