@@ -135,3 +135,17 @@ def save_data(
     data.to_csv(Path(path).joinpath(file_name), header = True, index = False)
 
     print(f"✅ {message}, with shape {data.shape}")
+
+def load_processed_data() ->pd.DataFrame:
+    """
+    Retrieves processed data
+
+    Returns matches_processed
+    """
+    data_path = Path(PROCESSED_DATA_PATH).joinpath(SOCCER_PROJECT, "soccer_match-matches_processed.csv")
+    if not data_path.is_file():
+        print("❌ File not found")
+    else:
+        matches_processed = pd.read_csv(data_path)
+
+    return matches_processed
