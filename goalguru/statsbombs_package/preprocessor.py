@@ -1,6 +1,6 @@
 import pandas as pd
 from params import *
-from data import read_events, read_matches
+from data import read_events
 
 def clean_matches(df):
     '''
@@ -55,34 +55,10 @@ def get_events_info_per_match(match_id, home_id, away_id):
 
   return away_df.drop(columns=['home_id', 'away_id'])
 
-def get_full_season_df(competition_id, season_id, merge=True):
-    '''
-    This function receives a competition_id and a season_id and returns a
-    dataframe that contains the full actual info for all the matches for the
-    given season (and competition).
-    `merge` is an optional parameter that tells if you want to merge the clean
-    matches dataframe (date, time...) with the new computed features.
-    '''
-    matches_df = read_matches(competition_id, season_id)
-    matches_df = clean_matches(matches_df)
 
-    events = []
-    for _, row in matches_df.iterrows():
-        match_id = row['match_id']
-        home_id = row['home_id']
-        away_id = row['away_id']
-        events.append(get_events_info_per_match(match_id, home_id, away_id))
-
-    matches_full_df = pd.concat(events, axis=0).reset_index(drop=True)
-    if merge:
-        matches_full_df = matches_df.merge(matches_full_df, on='match_id', how='left')
-
-    return matches_full_df
 
 
 if __name__ == '__main__':
     # ev_test = get_events_info_per_match(3890561, 175, 181)
     # print(ev_test)
-
-    match_full_test = get_full_season_df(9, 27)
-    print(match_full_test.head())
+    pass

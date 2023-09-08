@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 from params import *
+from preprocessor import clean_matches, get_events_info_per_match
 
 def valid_competitions():
     '''
@@ -26,6 +27,30 @@ def read_events(match_id):
     events_path = os.path.join(EVENTS_PATH, f'{str(match_id)}.json')
     events_df = pd.read_json(events_path)
     return events_df
+
+def get_full_season_df(competition_id, season_id, merge=True):
+    '''
+    This function receives a competition_id and a season_id and returns a
+    dataframe that contains the full actual info for all the matches for the
+    given season (and competition).
+    `merge` is an optional parameter that tells if you want to merge the clean
+    matches dataframe (date, time...) with the new computed features.
+    '''
+    matches_df = read_matches(competition_id, season_id)
+    matches_df = clean_matches(matches_df)
+
+    events = []
+    for _, row in matches_df.iterrows():
+        match_id = row['match_id']
+        home_id = row['home_id']
+        away_id = row['away_id']
+        events.append(get_events_info_per_match(match_id, home_id, away_id))
+
+    matches_full_df = pd.concat(events, axis=0).reset_index(drop=True)
+    if merge:
+        matches_full_df = matches_df.merge(matches_full_df, on='match_id', how='left')
+
+    return matches_full_df
 
 
 if __name__ == '__main__':
