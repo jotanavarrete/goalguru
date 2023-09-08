@@ -85,14 +85,31 @@ def root():
     return {'greeting': 'Hello'}
 
 
-from goalguru.api.api_logic import get_all_competitions , get_all_seasons
+from goalguru.api.api_logic import *
 
 @app.get("/competitions")
-def root():
+def get_competitions():
     competitions = get_all_competitions()
-    return {'competitions': competitions}
+    return competitions
+
+
+# http://127.0.0.1:8000/seasons?comptition_id_id=102
 
 @app.get("/seasons")
-def root():
-    seasons = get_all_seasons()
-    return {'competitions': seasons}
+def get_seasons(comptition_id : int):
+    seasons = get_all_seasons(comptition_id)
+    return seasons
+
+
+# http://127.0.0.1:8000/matches?competition_id=102&season_id=9291&matchweek=0
+@app.get("/matches")
+def get_matches(competition_id : int, season_id : int, matchweek : int):
+    matches = get_all_matches(competition_id, season_id, matchweek)
+    return matches
+
+
+# http://127.0.0.1:8000/results?match_id=1
+@app.get("/results")
+def get_results(match_id : int):
+    seasons = get_all_results(match_id)
+    return seasons

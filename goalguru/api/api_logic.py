@@ -2,6 +2,7 @@
 import pandas as pd
 
 ### Dtafrmes used for example
+"""
 data_soccer = pd.DataFrame([
     {'competition_id': 0, 'name': 'Premier League' , 'season_id': 0, 'season': '2016/2017', 'match_week': 1,'match': 'match_1'},
     {'competition_id': 0, 'name': 'Premier League' , 'season_id': 0, 'season': '2016/2017', 'match_week': 1,'match': 'match_1'},
@@ -178,35 +179,65 @@ data_stats = pd.DataFrame([
     {'competition_id': 2, 'name': 'Bundesliga' , 'season_id': 1, 'season': '2017/2018','match_week': 2, 'match': 'match_3'},
     ])
 
-from goalguru.api.fuctions import get_competitions , get_seasons
+"""
+
+import goalguru.soccermatch_package.ml_logic.api_connection as sm
+
 
 def get_all_competitions():
 
     """
     This Fuctions Returns a list of all comptetions, according to each dataset.
     """
+    #list_competitions_statbombs =
+    list_competitions_soccermatch = sm.get_competitions()
 
-    list_competitions_statbombs =  get_competitions(data_soccer, df_name='data_soccer') #get_statbombs_data() ## funcion que trae todas las competencias del dataset en una lista
-    list_competitions_soccermatch = get_competitions(data_stats, df_name='data_stats') #get_soccermatch_data()  ## funcion que trae todas las competencias del dataset en una lista
-
-    # Merge the two lists and remove duplicates based on the 'name' key
-    merged_list = list_competitions_statbombs + list_competitions_soccermatch
-
-    # Create a set of unique competition names, so only show the names of the competitions without repetition
+    merged_list = list_competitions_soccermatch #+ list_competitions_statbombs
 
     return merged_list
 
 
 
-def get_all_seasons():
+
+def get_all_seasons(competition_id : int):
 
     """
     This Fuctions Returns a list of all seasons, according to each dataset.
     """
 
-    list_seasons_statbombs = get_seasons(data_soccer, df_name='data_soccer') #get_statbombs_data() ## funcion que trae todas las seasons del dataset en una lista
-    list_seasons_soccermatch = get_seasons(data_soccer, df_name='data_soccer') #get_soccermatch_data()  ## funcion que trae todas las seasons del dataset en una lista
+    #list_seasons_statbombs =
+    list_seasons_soccermatch = sm.get_seasons(competition_id)
 
-    merged_list = list_seasons_statbombs + list_seasons_soccermatch
+    merged_list = list_seasons_soccermatch #+ list_seasons_statbombs
 
     return merged_list
+
+
+
+def get_all_matches(competition_id : int, season_id : int, matchweek : int):
+
+    """
+    This Fuctions Returns a list of all seasons, according to each dataset.
+    """
+
+    #list_matches_statbombs =
+    list_matches_soccermatch = sm.get_matches(competition_id, season_id, matchweek)
+
+    merged_list = list_matches_soccermatch #+ list_matches_statbombs
+
+    return merged_list
+
+
+
+def get_all_results(match_id : int):
+
+    """
+    This Fuctions Returns a list of all seasons, according to each dataset.
+    """
+
+    #list_results_soccermatch =
+    list_results_soccermatch = sm.get_results(match_id)
+
+    #merged_list = list_results_soccermatch #+ list_results_soccermatch
+
+    return list_results_soccermatch
