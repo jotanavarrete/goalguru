@@ -3,8 +3,8 @@
 .coverage
 .ipynb_checkpoints
 **/*.DS_Store
-raw_data/
-processed_data/
+data/
+training_outputs/
 *.csv
 __pycache__/
 .env

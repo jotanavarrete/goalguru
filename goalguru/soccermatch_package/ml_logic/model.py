@@ -8,7 +8,6 @@ Generar  initialize, compile, train, evaluatev el modelo
 import numpy as np
 import time
 
-from colorama import Fore, Style
 from typing import Tuple
 
 # Timing the TensorFlow import

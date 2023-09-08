@@ -1,9 +1,3 @@
-"""
-IMPORTANTE:
-En este codigo, se creara y prepocesara el dataframe
-"""
-
-
 import numpy as np
 import pandas as pd
 
@@ -15,7 +9,8 @@ from sklearn.compose import ColumnTransformer # make_column_transformer
 
 
 
-def preprocess_features(X: pd.DataFrame) -> np.ndarray:
+def preprocess_df(X: pd.DataFrame) -> np.ndarray:
+
     def create_preprocessor() -> ColumnTransformer:
         """
         La idea de esta funcion, es crear el pipeline que preprocese todo
