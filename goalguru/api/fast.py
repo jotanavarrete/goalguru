@@ -33,6 +33,9 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers
 )
 
+
+
+
 # http://127.0.0.1:8000/predict?pickup_datetime=2012-10-06 12:10:20&pickup_longitude=40.7614327&pickup_latitude=-73.9798156&dropoff_longitude=40.6513111&dropoff_latitude=-73.8803331&passenger_count=2
 
 ##%
@@ -75,11 +78,21 @@ def predict(
 
     return {'fare_amount': float(y_pred)} # YOUR CODE HERE
 
-
 """
 
 @app.get("/")
 def root():
-    return {
-    'greeting': 'Hello'
-    }
+    return {'greeting': 'Hello'}
+
+
+from goalguru.api.api_logic import get_all_competitions , get_all_seasons
+
+@app.get("/competitions")
+def root():
+    competitions = get_all_competitions()
+    return {'competitions': competitions}
+
+@app.get("/seasons")
+def root():
+    seasons = get_all_seasons()
+    return {'competitions': seasons}

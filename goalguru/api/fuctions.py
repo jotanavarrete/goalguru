@@ -14,7 +14,7 @@ Creamos las funciones para poder aplicar a la API y sepa donde buscar.
 
 
 
-def get_competitions(data):
+def get_competitions(data, df_name):
 
     ## This fuction returns a list of dictionaries with the following structure
 
@@ -27,90 +27,13 @@ def get_competitions(data):
     {'competition_id': 4, 'name': 'World Cup'}
     ]
     """
-
     # Group the DataFrame by 'competition_id' and 'name' columns and aggregate them
     grouped_data = data.groupby(['competition_id', 'name']).size().reset_index(name='count')
 
     # Convert the grouped DataFrame to a list of dictionaries
-    competition_list = [{'competition_id': row['competition_id'], 'name': row['name']} for index, row in grouped_data.iterrows()]
+    competition_list = [{'competition_id': row['competition_id'], 'name': row['name'], 'dataframe': df_name} for _, row in grouped_data.iterrows()]
 
     return competition_list
-
-
-
-
-
-data_soccer = pd.DataFrame([
-    {'competition_id': 0, 'name': 'Premier League' , 'season_id': 0, 'season': '2016/2017', 'match': 'match_1'},
-    {'competition_id': 0, 'name': 'Premier League' , 'season_id': 0, 'season': '2016/2017', 'match': 'match_2'},
-    {'competition_id': 0, 'name': 'Premier League' , 'season_id': 0, 'season': '2016/2017', 'match': 'match_3'},
-    {'competition_id': 0, 'name': 'Premier League' , 'season_id': 1, 'season': '2017/2018', 'match': 'match_1'},
-    {'competition_id': 0, 'name': 'Premier League' , 'season_id': 1, 'season': '2017/2018', 'match': 'match_2'},
-    {'competition_id': 0, 'name': 'Premier League' , 'season_id': 1, 'season': '2017/2018', 'match': 'match_3'},
-    {'competition_id': 0, 'name': 'Premier League' , 'season_id': 1, 'season': '2017/2018', 'match': 'match_4'},
-    {'competition_id': 0, 'name': 'Premier League' , 'season_id': 1, 'season': '2017/2018', 'match': 'match_5'},
-    {'competition_id': 0, 'name': 'Premier League' , 'season_id': 1, 'season': '2017/2018', 'match': 'match_6'},
-    {'competition_id': 0, 'name': 'Premier League' , 'season_id': 1, 'season': '2017/2018', 'match': 'match_7'},
-    {'competition_id': 0, 'name': 'Premier League' , 'season_id': 1, 'season': '2017/2018', 'match': 'match_8'},
-
-
-    {'competition_id': 1, 'name': 'Serie A' , 'season_id': 0, 'season': '2016/2017', 'match': 'match_1'},
-    {'competition_id': 1, 'name': 'Serie A' , 'season_id': 0, 'season': '2016/2017', 'match': 'match_2'},
-    {'competition_id': 1, 'name': 'Serie A' , 'season_id': 0, 'season': '2016/2017', 'match': 'match_3'},
-    {'competition_id': 1, 'name': 'Serie A' , 'season_id': 0, 'season': '2016/2017', 'match': 'match_4'},
-    {'competition_id': 1, 'name': 'Serie A' , 'season_id': 0, 'season': '2016/2017', 'match': 'match_5'},
-    {'competition_id': 1, 'name': 'Serie A' , 'season_id': 1, 'season': '2017/2018','match': 'match_1'},
-    {'competition_id': 1, 'name': 'Serie A' , 'season_id': 1, 'season': '2017/2018','match': 'match_2'},
-    {'competition_id': 1, 'name': 'Serie A' , 'season_id': 1, 'season': '2017/2018','match': 'match_3'},
-    {'competition_id': 1, 'name': 'Serie A' , 'season_id': 1, 'season': '2017/2018','match': 'match_4'},
-    {'competition_id': 1, 'name': 'Serie A' , 'season_id': 1, 'season': '2017/2018','match': 'match_5'},
-    {'competition_id': 1, 'name': 'Serie A' , 'season_id': 1, 'season': '2017/2018','match': 'match_6'},
-    {'competition_id': 1, 'name': 'Serie A' , 'season_id': 1, 'season': '2017/2018','match': 'match_7'},
-    {'competition_id': 1, 'name': 'Serie A' , 'season_id': 1, 'season': '2017/2018','match': 'match_8'},
-
-    {'competition_id': 2, 'name': 'Bundesliga' , 'season_id': 0, 'season': '2016/2017', 'match': 'match_1'},
-    {'competition_id': 2, 'name': 'Bundesliga' , 'season_id': 0, 'season': '2016/2017', 'match': 'match_2'},
-    {'competition_id': 2, 'name': 'Bundesliga' , 'season_id': 0, 'season': '2016/2017', 'match': 'match_3'},
-    {'competition_id': 2, 'name': 'Bundesliga' , 'season_id': 0, 'season': '2016/2017', 'match': 'match_4'},
-    {'competition_id': 2, 'name': 'Bundesliga' , 'season_id': 1, 'season': '2017/2018', 'match': 'match_1'},
-    {'competition_id': 2, 'name': 'Bundesliga' , 'season_id': 1, 'season': '2017/2018', 'match': 'match_2'},
-    ])
-
-data_stats = pd.DataFrame([
-    {'competition_id': 0, 'name': 'Premier League' , 'season_id': 0, 'season': '2016/2017', 'match': 'match_1'},
-    {'competition_id': 0, 'name': 'Premier League' , 'season_id': 0, 'season': '2016/2017', 'match': 'match_2'},
-    {'competition_id': 0, 'name': 'Premier League' , 'season_id': 1, 'season': '2017/2018', 'match': 'match_1'},
-    {'competition_id': 0, 'name': 'Premier League' , 'season_id': 1, 'season': '2017/2018', 'match': 'match_2'},
-    {'competition_id': 0, 'name': 'Premier League' , 'season_id': 1, 'season': '2017/2018', 'match': 'match_3'},
-    {'competition_id': 0, 'name': 'Premier League' , 'season_id': 1, 'season': '2017/2018', 'match': 'match_4'},
-
-
-
-    {'competition_id': 1, 'name': 'Serie A' , 'season_id': 0, 'season': '2016/2017', 'match': 'match_1'},
-    {'competition_id': 1, 'name': 'Serie A' , 'season_id': 0, 'season': '2016/2017', 'match': 'match_2'},
-    {'competition_id': 1, 'name': 'Serie A' , 'season_id': 0, 'season': '2016/2017', 'match': 'match_3'},
-    {'competition_id': 1, 'name': 'Serie A' , 'season_id': 1, 'season': '2017/2018','match': 'match_1'},
-    {'competition_id': 1, 'name': 'Serie A' , 'season_id': 1, 'season': '2017/2018','match': 'match_2'},
-    {'competition_id': 1, 'name': 'Serie A' , 'season_id': 1, 'season': '2017/2018','match': 'match_3'},
-    {'competition_id': 1, 'name': 'Serie A' , 'season_id': 1, 'season': '2017/2018','match': 'match_4'},
-
-
-    {'competition_id': 2, 'name': 'Bundesliga' , 'season_id': 0, 'season': '2016/2017', 'match': 'match_1'},
-    {'competition_id': 2, 'name': 'Bundesliga' , 'season_id': 0, 'season': '2016/2017', 'match': 'match_2'},
-    {'competition_id': 2, 'name': 'Bundesliga' , 'season_id': 0, 'season': '2016/2017', 'match': 'match_3'},
-    {'competition_id': 2, 'name': 'Bundesliga' , 'season_id': 0, 'season': '2016/2017', 'match': 'match_4'},
-    {'competition_id': 2, 'name': 'Bundesliga' , 'season_id': 0, 'season': '2016/2017', 'match': 'match_5'},
-    {'competition_id': 2, 'name': 'Bundesliga' , 'season_id': 0, 'season': '2016/2017', 'match': 'match_6'},
-    {'competition_id': 2, 'name': 'Bundesliga' , 'season_id': 0, 'season': '2016/2017', 'match': 'match_7'},
-    {'competition_id': 2, 'name': 'Bundesliga' , 'season_id': 1, 'season': '2017/2018', 'match': 'match_1'},
-    {'competition_id': 2, 'name': 'Bundesliga' , 'season_id': 1, 'season': '2017/2018', 'match': 'match_2'},
-    {'competition_id': 2, 'name': 'Bundesliga' , 'season_id': 1, 'season': '2017/2018', 'match': 'match_3'},
-    {'competition_id': 2, 'name': 'Bundesliga' , 'season_id': 1, 'season': '2017/2018', 'match': 'match_4'},
-    ])
-
-
-
-
 
 
 def get_seasons(competition_id):
@@ -166,76 +89,97 @@ def get_seasons(competition_id):
     return seasons_list
 
 
-    r
+
 ## cada dataset tiene a priori tiene un season unico.
 ## matchweeks: Partidos de la temporada
 
 
-
+"""
 def get_matches(competition_id, season_id, matchweek, dataset (soccermatch or statsbomb)):
-
+"""
 
 
 # returns a list of all the matches for the given parameters, with the following
 # structure. This method internally looks into the corresponding
 #  dataset (soccermatch or statsbomb) and fetches the list of the matches
-matches = {
-    0: {
+"""
+    matches = {
         0: {
-            0: [
-                {'match_id': 1545, 'name': 'Arsenal vs Tottenham'},
-                {'match_id': 6545, 'name': 'ManU vs ManCity'}
-                ]
+            0: {
+                0: [
+                    {'match_id': 1545, 'name': 'Arsenal vs Tottenham','home_team':'Asesnal', 'away_team':'Tottenham'},
+                    {'match_id': 6545, 'name': 'ManU vs ManCity'}
+                    ]
+                },
+            1: {
+                0: [
+                    {'match_id': 484, 'name': 'Liverpool vs Everton'},
+                    {'match_id': 6546, 'name': 'Burnley vs Wolves'}
+                    ]
+                }
             },
         1: {
-            0: [
-                {'match_id': 484, 'name': 'Liverpool vs Everton'},
-                {'match_id': 6546, 'name': 'Burnley vs Wolves'}
-                ]
-            }
-        },
-    1: {
-        0: {
-            0: [
-                {'match_id': 198, 'name': 'Inter vs Milan'},
-                {'match_id': 1154, 'name': 'Juventus vs Torino'}
-                ]
+            0: {
+                0: [
+                    {'match_id': 198, 'name': 'Inter vs Milan'},
+                    {'match_id': 1154, 'name': 'Juventus vs Torino'}
+                    ]
+                },
+            1: {
+                0: [
+                    {'match_id': 1981, 'name': 'Lazio vs Fiorentina'},
+                    {'match_id': 62, 'name': 'Napoli vs Palermo'}
+                    ]
+                }
             },
-        1: {
-            0: [
-                {'match_id': 1981, 'name': 'Lazio vs Fiorentina'},
-                {'match_id': 62, 'name': 'Napoli vs Palermo'}
-                ]
-            }
-        },
-    2: {
-        0: {
-            0: [
-                {'match_id': 654, 'name': 'Borussia Dortmund vs Bayern Munchen'},
-                {'match_id': 98, 'name': 'Hannover vs Mainz'}
-                ]
-            }
-        },
-    3: {
-        0: {
-            0: [
-                {'match_id': 78, 'name': 'Barcelona vs Real Madrid'},
-                {'match_id': 14, 'name': 'Real Sociedad vs Athletic Bilbao'}
-                ]
+        2: {
+            0: {
+                0: [
+                    {'match_id': 654, 'name': 'Borussia Dortmund vs Bayern Munchen'},
+                    {'match_id': 98, 'name': 'Hannover vs Mainz'}
+                    ]
+                }
             },
-        1: {
-            0: [
-                {'match_id': 1, 'name': 'Athletic Bilbao vs Real Madrid'},
-                {'match_id': 2, 'name': 'Real Sociedad vs Barcelona'}
-                ]
-            }
-        },
-    4: {
-        0: {
-            0:[
-                {'match_id': 33, 'name': 'Argentina vs France'},
-                {'match_id': 55, 'name': 'Croatia vs England'}
-                ]
-            }
-        },
+        3: {
+            0: {
+                0: [
+                    {'match_id': 78, 'name': 'Barcelona vs Real Madrid'},
+                    {'match_id': 14, 'name': 'Real Sociedad vs Athletic Bilbao'}
+                    ]
+                },
+            1: {
+                0: [
+                    {'match_id': 1, 'name': 'Athletic Bilbao vs Real Madrid'},
+                    {'match_id': 2, 'name': 'Real Sociedad vs Barcelona'}
+                    ]
+                }
+            },
+        4: {
+            0: {
+                0:[
+                    {'match_id': 33, 'name': 'Argentina vs France'},
+                    {'match_id': 55, 'name': 'Croatia vs England'}
+                    ]
+                }
+            },
+    }
+    """
+
+ #   return None
+
+
+
+# API predict(match_id, dataset)
+# returns a prediction with the following structure
+prediction = {
+    'outcome': 1,
+    'probabilities': [0.56, 0.24, 0.20]
+}
+
+# API get_result(match_id, dataset)
+# returns the result of a given match with the following structure
+# (to change for the real team names)
+
+result = {
+    'result': 'local team 2 - 1 away team'
 }
