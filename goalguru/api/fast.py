@@ -1,4 +1,5 @@
-import pandas as pd
+# import pandas as pd
+from goalguru.api.api_logic import *
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -28,9 +29,6 @@ app.add_middleware(
 @app.get("/")
 def root():
     return {'greeting': 'Hello'}
-
-
-from goalguru.api.api_logic import *
 
 # http://127.0.0.1:8000/competitions
 @app.get("/competitions")
