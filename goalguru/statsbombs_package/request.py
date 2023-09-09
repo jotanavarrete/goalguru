@@ -45,7 +45,7 @@ def save_seasons():
     for competition in competitions:
         competition_id = competition['competition_id']
         actual_competition_df = competitions_df.query(f'competition_id == {competition_id}')
-        seasons_list = actual_competition_df[['season_id', 'season_name']].to_dict('records')
+        seasons_list = actual_competition_df[['season_id', 'season_name']].rename(columns={'season_name': 'name'}).to_dict('records')
 
         for season in seasons_list:
             matches_df = read_matches(competition_id, season['season_id'])
