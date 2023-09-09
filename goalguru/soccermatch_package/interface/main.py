@@ -33,10 +33,10 @@ def preprocess():
                        f'{SOCCER_PROJECT}-matches_processed.csv',
                        processed_data_path,
                        'Saved processed matches locally')
-        data.save_data(X,
-                       f'{SOCCER_PROJECT}-X_processed.csv',
-                       processed_data_path,
-                       'Saved X processed locally')
+        #data.save_data(X,
+        #               f'{SOCCER_PROJECT}-X_processed.csv',
+        #               processed_data_path,
+        #               'Saved X processed locally')
         data.save_data(y,
                        f'{SOCCER_PROJECT}-y_processed.csv',
                        processed_data_path,

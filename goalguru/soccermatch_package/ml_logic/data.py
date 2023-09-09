@@ -103,6 +103,18 @@ def clean_data(matches: pd.DataFrame) -> pd.DataFrame:
 
 def create_features(all_matches:pd.DataFrame) -> pd.DataFrame:
     """
+    Create relevant 50 features for model
+
+    Returns dataframe with features
+    """
+    matches = all_matches.copy()
+    #Get accuracy features
+    matches = features.get_features(matches)
+
+    print("✅ Features created")
+    return matches
+def create_features1(all_matches:pd.DataFrame) -> pd.DataFrame:
+    """
     Create relevant features for model
     [
     'avgHomePassAccuLast10Games','avgHomeShotAccuLast10Games',

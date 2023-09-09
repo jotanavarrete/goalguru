@@ -1,10 +1,3 @@
-"""
-IMPORTANTE:
-Esta seccion esta para cargar el modelo.
-Generar  initialize, compile, train, evaluatev el modelo
-
-"""
-
 import numpy as np
 import time
 
