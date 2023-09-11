@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 ## Model from soccermatch_package
 #% from goalguru.soccermatch_package.preprocessor  import preprocess_features
-#% from goalguru.soccermatch_package.registry import load_model
+# from goalguru.soccermatch_package.ml_logic.registry import load_model as load_model_sm
 
 ## Model from statsbombs_package
 #% from goalguru.statsbombs_package.preprocessor  import preprocess_features
@@ -13,7 +13,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-#app.state.model =load_model()
+# app.state.model_sm = load_model_sm()
 
 
 # Allowing all middleware is optional, but good practice for dev purposes
@@ -54,5 +54,5 @@ def get_matches(competition_id : int, season_id : int, matchweek : int, dataset:
 # http://127.0.0.1:8000/results?match_id=1
 @app.get("/results")
 def get_results(match_id : int):
-    seasons = get_all_results(match_id)
-    return seasons
+    results = get_all_results(match_id)
+    return results
