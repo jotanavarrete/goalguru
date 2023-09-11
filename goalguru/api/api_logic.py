@@ -88,6 +88,6 @@ def get_X_preprocessed(match_id: int, dataset: str):
 
     elif dataset == 'statsbomb':
         # X_preprocessed = sb.get_X_preprocessed(match_id)
-        pass
+        X_preprocessed = None
 
     return X_preprocessed
