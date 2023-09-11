@@ -108,7 +108,7 @@ def get_matches(competition_id : int, season_id : int, matchweek : int):
     return matches
 
 
-# http://127.0.0.1:8000/results?match_id=1
+# http://127.0.0.1:8000/results?match_id=2499778
 @app.get("/results")
 def get_results(match_id : int):
     seasons = get_all_results(match_id)
