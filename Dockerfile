@@ -1,0 +1,25 @@
+####### 👇 OPTIMIZED SOLUTION (x86)👇 #######
+
+# tensorflow base-images are optimized: lighter than python-buster + pip install tensorflow
+#FROM tensorflow/tensorflow:2.10.0
+From python:3.8.12-buster
+# OR for apple silicon, use this base image instead
+# FROM armswdev/tensorflow-arm-neoverse:r22.09-tf-2.10.0-eigen
+
+WORKDIR /prod
+
+# We strip the requirements from useless packages like `ipykernel`, `matplotlib` etc...
+#requirements_prod.txt (se lo agregan, pero nose si sera necesario.)
+COPY requirements.txt requirements.txt
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
+
+COPY goalguru goalguru
+COPY setup.py setup.py
+RUN pip install .
+
+#COPY Makefile Makefile
+#RUN make reset_local_files
+
+CMD uvicorn goalguru.api.fast:app --host 0.0.0.0 --port $PORT
+# $DEL_END

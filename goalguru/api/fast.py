@@ -38,6 +38,7 @@ def get_competitions():
 
 
 # http://127.0.0.1:8000/seasons?competition_id=102
+# http://127.0.0.1:8000/seasons?competition_id=55
 @app.get("/seasons")
 def get_seasons(competition_id : int):
     seasons = get_all_seasons(competition_id)
@@ -45,6 +46,9 @@ def get_seasons(competition_id : int):
 
 
 # http://127.0.0.1:8000/matches?competition_id=102&season_id=9291&matchweek=0&dataset=soccermatch
+# http://127.0.0.1:8000/matches?competition_id=9&season_id=27&matchweek=1&dataset=statsbomb
+# http://127.0.0.1:8000/matches?competition_id=55&season_id=43&matchweek=1&dataset=statsbomb
+
 @app.get("/matches")
 def get_matches(competition_id : int, season_id : int, matchweek : int, dataset: str):
     matches = get_all_matches(competition_id, season_id, matchweek, dataset)
@@ -52,6 +56,8 @@ def get_matches(competition_id : int, season_id : int, matchweek : int, dataset:
 
 
 # http://127.0.0.1:8000/results?match_id=2499778
+# http://127.0.0.1:8000/results?match_id=3890259
+
 @app.get("/results")
 def get_results(match_id : int):
     seasons = get_all_results(match_id)
