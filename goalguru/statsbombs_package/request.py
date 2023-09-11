@@ -142,11 +142,11 @@ def get_matches(competition_id, season_id, matchweek):
     return actual_matches
 
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
     # print(get_competitions())
     # save_seasons()
     # print(get_seasons(9))
     # print(get_matches(9, 27, 1))
     # save_competitions()
     # save_seasons()
-    save_matches()
+    # save_matches()
