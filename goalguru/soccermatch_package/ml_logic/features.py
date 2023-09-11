@@ -273,29 +273,29 @@ def get_features(matches):
             except:
                 matches.loc[index, f'last_10_{team_str}{as_str}avg_shot_accu'] = inputer
             try:
-                matches.loc[index, f'last_10_{team_str}{as_str}total_passes'] = matches[(condition_team) & condition_date].head(10)[[like, passes]].groupby(like).sum().loc[team,passes]
+                matches.loc[index, f'last_10_{team_str}{as_str}avg_total_passes'] = matches[(condition_team) & condition_date].head(10)[[like, passes]].groupby(like).mean().loc[team,passes]
             except:
-                matches.loc[index, f'last_10_{team_str}{as_str}total_passes'] = inputer
+                matches.loc[index, f'last_10_{team_str}{as_str}avg_total_passes'] = inputer
             try:
-                matches.loc[index, f'last_10_{team_str}{as_str}total_accu_passes'] = matches[(condition_team) & condition_date].head(10)[[like, accu_passes]].groupby(like).sum().loc[team,accu_passes]
+                matches.loc[index, f'last_10_{team_str}{as_str}avg_total_accu_passes'] = matches[(condition_team) & condition_date].head(10)[[like, accu_passes]].groupby(like).mean().loc[team,accu_passes]
             except:
-                matches.loc[index, f'last_10_{team_str}{as_str}total_accu_passes'] = inputer
+                matches.loc[index, f'last_10_{team_str}{as_str}avg_total_accu_passes'] = inputer
             try:
-                matches.loc[index, f'last_10_{team_str}{as_str}total_shots'] = matches[(condition_team) & condition_date].head(10)[[like, shots]].groupby(like).sum().loc[team,shots]
+                matches.loc[index, f'last_10_{team_str}{as_str}avg_total_shots'] = matches[(condition_team) & condition_date].head(10)[[like, shots]].groupby(like).mean().loc[team,shots]
             except:
-                matches.loc[index, f'last_10_{team_str}{as_str}total_shots'] = inputer
+                matches.loc[index, f'last_10_{team_str}{as_str}avg_total_shots'] = inputer
             try:
-                matches.loc[index, f'last_10_{team_str}{as_str}total_accu_shots'] = matches[(condition_team) & condition_date].head(10)[[like, accu_shots]].groupby(like).sum().loc[team,accu_shots]
+                matches.loc[index, f'last_10_{team_str}{as_str}avg_total_accu_shots'] = matches[(condition_team) & condition_date].head(10)[[like, accu_shots]].groupby(like).mean().loc[team,accu_shots]
             except:
-                matches.loc[index, f'last_10_{team_str}{as_str}total_accu_shots'] = inputer
+                matches.loc[index, f'last_10_{team_str}{as_str}avg_total_accu_shots'] = inputer
             try:
-                matches.loc[index, f'last_10_{team_str}{as_str}total_goals'] = matches[(condition_team) & condition_date].head(10)[[like, goals]].groupby(like).sum().loc[team,goals]
+                matches.loc[index, f'last_10_{team_str}{as_str}avg_total_goals'] = matches[(condition_team) & condition_date].head(10)[[like, goals]].groupby(like).mean().loc[team,goals]
             except:
-                matches.loc[index, f'last_10_{team_str}{as_str}total_goals'] = inputer
+                matches.loc[index, f'last_10_{team_str}{as_str}avg_total_goals'] = inputer
             try:
-                matches.loc[index, f'last_10_{team_str}{as_str}total_goals_in'] = matches[(condition_team) & condition_date].head(10)[[like, goals_in]].groupby(like).sum().loc[team,goals_in]
+                matches.loc[index, f'last_10_{team_str}{as_str}avg_total_goals_in'] = matches[(condition_team) & condition_date].head(10)[[like, goals_in]].groupby(like).mean().loc[team,goals_in]
             except:
-                matches.loc[index, f'last_10_{team_str}{as_str}total_goals_in'] = inputer
+                matches.loc[index, f'last_10_{team_str}{as_str}avg_total_goals_in'] = inputer
             try:
                 matches.loc[index, f'last_10_{team_str}{as_str}avg_matchranks'] = matches[(condition_team) & condition_date].head(10)[[like, matchrank]].groupby(like).mean().loc[team,matchrank]
             except:

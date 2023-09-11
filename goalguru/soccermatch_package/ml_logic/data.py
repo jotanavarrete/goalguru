@@ -132,7 +132,7 @@ def create_features1(all_matches:pd.DataFrame) -> pd.DataFrame:
     #Get WR features
     matches = features.get_wr(matches)
 
-    print("✅ Features created")
+    print("✅ Features 1 created")
     return matches
 
 def save_data(
@@ -156,7 +156,7 @@ def load_processed_data() ->pd.DataFrame:
     """
     data_path = Path(PROCESSED_DATA_PATH).joinpath(SOCCER_PROJECT, "soccer_match-matches_processed.csv")
     if not data_path.is_file():
-        print("❌ File not found")
+        print("❌ File not found, preprocess first")
     else:
         matches_processed = pd.read_csv(data_path)
 
