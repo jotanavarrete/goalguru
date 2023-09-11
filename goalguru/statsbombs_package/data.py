@@ -1,6 +1,6 @@
 import os
 import pandas as pd
-from params import *
+from goalguru.statsbombs_package.params import *
 
 def valid_competitions():
     '''
@@ -28,13 +28,13 @@ def read_events(match_id):
     return events_df
 
 
-if __name__ == '__main__':
-    # print(valid_competitions())
-    # print(read_match(2,27).head())
-    test_matches = read_matches(2,27)
-    # from preprocessor import clean_matches
-    # print(clean_matches(test_matches).head())
-    test_match_id = test_matches.iloc[0]['match_id']
-    print(test_match_id)
-    test_events = read_events(test_match_id)
-    print(test_events.head())
+# if __name__ == '__main__':
+#     # print(valid_competitions())
+#     # print(read_match(2,27).head())
+#     test_matches = read_matches(2,27)
+#     # from preprocessor import clean_matches
+#     # print(clean_matches(test_matches).head())
+#     test_match_id = test_matches.iloc[0]['match_id']
+#     print(test_match_id)
+#     test_events = read_events(test_match_id)
+#     print(test_events.head())

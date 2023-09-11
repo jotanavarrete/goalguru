@@ -1,14 +1,14 @@
 import json
 import os
 from pathlib import Path
-from data import valid_competitions, read_matches
-from params import REQUEST_PATH
+from goalguru.statsbombs_package.data import valid_competitions, read_matches
+from goalguru.statsbombs_package.params import REQUEST_PATH
 
 
 def save_competitions():
 
     competitions_df = valid_competitions()[['competition_id', 'competition_name']]\
-        .drop_duplicates()
+        .drop_duplicates().rename(columns={'competition_name': 'name'})
 
     competitions_list = competitions_df.to_dict('records')
 
@@ -45,7 +45,7 @@ def save_seasons():
     for competition in competitions:
         competition_id = competition['competition_id']
         actual_competition_df = competitions_df.query(f'competition_id == {competition_id}')
-        seasons_list = actual_competition_df[['season_id', 'season_name']].to_dict('records')
+        seasons_list = actual_competition_df[['season_id', 'season_name']].rename(columns={'season_name': 'name'}).to_dict('records')
 
         for season in seasons_list:
             matches_df = read_matches(competition_id, season['season_id'])
@@ -139,11 +139,11 @@ def get_matches(competition_id, season_id, matchweek):
     return actual_matches
 
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
     # print(get_competitions())
     # save_seasons()
     # print(get_seasons(9))
-    print(get_matches(9, 27, 1))
-    # print(save_competitions())
+    # print(get_matches(9, 27, 1))
+    # save_competitions()
     # save_seasons()
     # save_matches()

@@ -1,6 +1,6 @@
 import pandas as pd
-from params import *
-from data import read_events, read_matches
+from goalguru.statsbombs_package.params import *
+from goalguru.statsbombs_package.data import read_events, read_matches
 
 def clean_matches(df):
     '''
@@ -80,9 +80,8 @@ def get_full_season_df(competition_id, season_id, merge=True):
     return matches_full_df
 
 
+
 if __name__ == '__main__':
     # ev_test = get_events_info_per_match(3890561, 175, 181)
     # print(ev_test)
-
-    match_full_test = get_full_season_df(9, 27)
-    print(match_full_test.head())
+    pass
