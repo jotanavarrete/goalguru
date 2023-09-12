@@ -14,6 +14,7 @@ COPY requirements.txt requirements.txt
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
+# COPY data data
 COPY goalguru goalguru
 COPY setup.py setup.py
 RUN pip install .
@@ -23,3 +24,5 @@ RUN pip install .
 
 CMD uvicorn goalguru.api.fast:app --host 0.0.0.0 --port $PORT
 # $DEL_END
+
+## docker run -it -e PORT=8000 -p 8000:8000 newimage
