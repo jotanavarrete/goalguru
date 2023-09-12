@@ -118,7 +118,7 @@ def load_full_season_past_info(competition_id, season_id):
     print(f'{filename} loaded locally')
     return full_season_df
 
-def load_all_seasons_past_info(save_concat=False):
+def load_all_seasons_past_info(save_concat=False, load_saved=True):
     '''
     This function loads the full seasons with the past info (passes and shots for
     the past matches) locally, for all the available competitions and seasons.
@@ -127,6 +127,13 @@ def load_all_seasons_past_info(save_concat=False):
     `save_concat` is an optional parameters that indicates if one wants to save
     the concatenation of all the dataframes.
     '''
+    if load_saved:
+        filename = f'all_seasons.csv'
+        file_path = os.path.join(TRAINING_MATCHES_PATH, filename)
+        all_seasons = pd.read_csv(file_path)
+        print(f'{filename} loaded locally')
+        return all_seasons
+
     seasons_full_dfs = []
     competitions = valid_competitions()
     for _, row in competitions.iterrows():

@@ -11,6 +11,7 @@ EVENTS_PATH = os.path.join(file_path, raw_data_path, 'events')
 REQUEST_PATH = os.path.join(file_path, proccesed_data_path, 'request')
 ACTUAL_MATCHES_PATH = os.path.join(file_path, proccesed_data_path, 'actual_matches')
 TRAINING_MATCHES_PATH = os.path.join(file_path, proccesed_data_path, 'training')
+LOCAL_REGISTRY_PATH = os.path.join(file_path, proccesed_data_path, 'training_outputs')
 
 # COLUMNS
 COLS_DROP_CLEAN = ['match_status', 'match_status_360', 'last_updated', 'last_updated_360', 'metadata', 'stadium', 'referee']

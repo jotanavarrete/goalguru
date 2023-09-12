@@ -3,6 +3,8 @@ import os
 from pathlib import Path
 from goalguru.statsbombs_package.data import valid_competitions, read_matches
 from goalguru.statsbombs_package.params import REQUEST_PATH
+from goalguru.statsbombs_package.data_processor import load_all_seasons_past_info
+from goalguru.statsbombs_package.registry import load_scaler
 
 
 def save_competitions():
@@ -141,6 +143,14 @@ def get_matches(competition_id, season_id, matchweek):
 
     return actual_matches
 
+def get_X_preprocessed(match_id):
+    all_data = load_all_seasons_past_info(save_concat=False, load_saved=True).query('match_id == @match_id')
+    all_data_not_na = all_data.fillna(0)
+    X_pred = all_data_not_na.drop(columns=['match_id', 'target'])
+    scaler = load_scaler()
+    X_pred = scaler.transform(X_pred)
+    return X_pred
+
 
 # if __name__ == '__main__':
     # print(get_competitions())
@@ -150,3 +160,4 @@ def get_matches(competition_id, season_id, matchweek):
     # save_competitions()
     # save_seasons()
     # save_matches()
+    # print(get_X_preprocessed(3835321))
