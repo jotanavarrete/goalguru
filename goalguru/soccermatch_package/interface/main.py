@@ -21,22 +21,28 @@ def preprocess():
 
     processed_data_path = Path(PROCESSED_DATA_PATH).joinpath(SOCCER_PROJECT)
     data_query_cache_path = Path(processed_data_path).joinpath(f"{SOCCER_PROJECT}-matches_processed.csv")
+    merged_data_path = Path(processed_data_path).joinpath(f'{SOCCER_PROJECT}-leagues_merged.csv')
     if not data_query_cache_path.is_file():
-        matches, events, playerank, teams = data.load_data()
+        if not merged_data_path.is_file():
+            matches, events, playerank, teams = data.load_data()
+            all_matches =data.merge_data(matches,
+                                        events,
+                                        playerank,
+                                        teams)
+        else:
+            all_matches = pd.read_csv(merged_data_path)
 
-        all_matches =data.merge_data(matches,
-                                    events,
-                                    playerank,
-                                    teams)
 
+        #all_matches = data.create_features(all_matches)
         all_matches = data.create_features(all_matches)
-        all_matches = data.create_features1(all_matches)
 
         matches_cleaned = data.clean_data(all_matches)
 
         X = matches_cleaned[FEATURES]
         y = matches_cleaned[TARGET]
 
+        print("------ Saving data ------")
+        print('-------------------------')
         data.save_data(matches_cleaned,
                        f'{SOCCER_PROJECT}-matches_processed.csv',
                        processed_data_path,
@@ -159,5 +165,4 @@ def pred(X_pred: pd.DataFrame = None) -> np.ndarray:
     y_pred = model.predict(X_processed)
 
     print("\n✅ prediction done: ", y_pred, "\n")
-    breakpoint()
     return y_pred
