@@ -3,9 +3,6 @@ from goalguru.soccermatch_package.params import *
 from goalguru.soccermatch_package.ml_logic.api_connection import get_x_preprocessed
 from goalguru.soccermatch_package.ml_logic.preprocess import scale_x
 
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import RobustScaler
-
 from goalguru.soccermatch_package.ml_logic.model import initialize_model, train_model, evaluate_model
 from goalguru.soccermatch_package.ml_logic.registry import load_model, save_model, save_results
 
@@ -151,5 +148,6 @@ def pred(X_pred: pd.DataFrame = None) -> np.ndarray:
     X_processed = scale_x(X_pred)
     y_pred = model.predict_proba(X_processed)
 
-    print("\n✅ prediction done: ", y_pred, "\n")
+    print(Fore.BLUE + f"Getting prediction..." + Style.RESET_ALL)
+    print("✅ prediction done: ", y_pred, "\n")
     return y_pred

@@ -1,5 +1,6 @@
 import numpy as np
 import time
+import pickle
 
 from colorama import Fore, Style
 from typing import Tuple
@@ -10,6 +11,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import RobustScaler
 from sklearn.model_selection import GridSearchCV
+
+from goalguru.soccermatch_package.params import *
 
 
 
@@ -44,6 +47,8 @@ def train_model(
     """
     Fit the model and return a tuple (fitted_model, history)
     """
+    timestamp = time.strftime("%Y%m%d-%H%M%S")
+
     print(Fore.BLUE + "\nTraining model..." + Style.RESET_ALL)
 
     X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=test_size)
@@ -53,6 +58,12 @@ def train_model(
     scaler = RobustScaler()
     X_train = scaler.fit_transform(X_train)
     X_test = scaler.transform(X_test)
+
+    #Save scaler locally
+    scaler_path = os.path.join(LOCAL_REGISTRY_PATH, "scalers", f"{timestamp}.h5")
+    with open(scaler_path, 'wb') as file:
+        pickle.dump(scaler, file)
+    print(f"✅ Scaler saved locally \n")
 
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
