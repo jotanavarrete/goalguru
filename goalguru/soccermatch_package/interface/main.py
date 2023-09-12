@@ -10,6 +10,8 @@ from pathlib import Path
 from colorama import Fore, Style
 import pandas as pd
 
+from io import StringIO
+
 def preprocess():
     """
     - Load raw matches datasets from all leagues matches and events, and from
@@ -141,7 +143,8 @@ def pred(X_pred: pd.DataFrame = None) -> np.ndarray:
 
     if X_pred is None:
         print('❌ X not valid: showing case example')
-        X_pred = pd.read_json(get_x_preprocessed(2058013))
+        X_pred = pd.read_json(StringIO(get_x_preprocessed(2058013)))
+
     model = load_model()
     assert model is not None
 
