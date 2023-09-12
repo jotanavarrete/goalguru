@@ -1,6 +1,7 @@
 import os
 import numpy as np
 
+SOCCER_PROJECT = "soccer_match"
 
 ##################  PATHS  #####################
 file_path = os.path.dirname(os.path.abspath(__file__))
@@ -8,10 +9,10 @@ LOCAL_DATA_PATH = os.path.join(file_path,'..','..',"data")
 PROCESSED_DATA_PATH = os.path.join(file_path,'..', '..', "data", "processed_data")
 API_DATA_PATH = os.path.join(file_path,'..','..', "data", "api_cache")
 RAW_DATA_PATH = os.path.join(file_path,'..','..', "data", "raw_data")
-LOCAL_REGISTRY_PATH =  os.path.join(file_path,'..','..', "training_outputs")
+LOCAL_REGISTRY_PATH =  os.path.join(LOCAL_DATA_PATH, "training_outputs", SOCCER_PROJECT)
 
 ##################  CONSTANTS_SOCCMATCH  #####################
-SOCCER_PROJECT = "soccer_match"
+
 COLUMN_NAMES_RAW = ['teamsData', 'dateutc', 'competitionId', 'seasonId', 'gameweek', 'wyId','winner']
 FEATURES = ['last_10_home_avg_pass_accu',
        'last_10_home_avg_shot_accu',
