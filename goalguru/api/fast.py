@@ -7,12 +7,12 @@ from fastapi.middleware.cors import CORSMiddleware
 # from goalguru.soccermatch_package.ml_logic.registry import load_model as load_model_sm
 
 ## Model from statsbombs_package
-# from goalguru.statsbombs_package.registry import load_model as load_model_sb
+from goalguru.statsbombs_package.registry import load_model as load_model_sb
 
 app = FastAPI()
 
 # app.state.model_sm = load_model_sm()
-# app.state.model_sb = load_model_sb()
+app.state.model_sb = load_model_sb()
 
 
 # Allowing all middleware is optional, but good practice for dev purposes
@@ -58,16 +58,16 @@ def predict(match_id: int, dataset: str):
     # now we do the prediction, depending on the model
     # if dataset == 'soccermatch':
         # prediction = app.state.model_sm.predict(X_preprocessed)
-    # if dataset == 'statsbomb':
-        # prediction = app.state.model_sb.predict(X_preprocessed)
+    if dataset == 'statsbomb':
+        outcome = app.state.model_sb.predict(X_preprocessed)
+        probs = app.state.model_sb.predict_proba(X_preprocessed)
 
     # we do something with the prediction (ie, determining the outcome,
     # reversing the probabilities, obtaining the first element)
-    refactored_prediction = None  # do something with the prediction!
-    # example
+
     refactored_prediction = {
-        'outcome': 1,
-        'probabilities': [0.59, 0.25, 0.16]
+        'outcome': outcome.tolist()[0],
+        'probabilities': probs.tolist()[0][::-1] #[0.59, 0.25, 0.16]
     }
     return refactored_prediction
 
