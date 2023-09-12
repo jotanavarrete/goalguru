@@ -115,29 +115,6 @@ def get_matches(competition_id : int,
         return match_l
 
 
-def get_results(match_id : int) -> dict:
-    """
-    Retrieves result from a given match id from the processed dataset
-    If file containing the result for the match id already exists it retrieves
-    it from the cache path, if not it creates it
-
-    Returns a dictionary with the key ['result']
-
-    """
-
-    path = Path(API_DATA_PATH).joinpath(SOCCER_PROJECT, f'result_{match_id}.json')
-    if not path.is_file():
-        dataset = load_processed_data()
-        game = dataset[dataset['matchId'] == match_id]
-        result = {}
-        res = f"{game.homeTeam[0]} {game.homeScore[0]} - {game.awayTeam[0]} {game.awayScore[0]}"
-        result['result'] = res
-        save_json(result,path)
-        return result
-    else:
-        result = read_json(path)
-        return result
-
 def get_x_preprocessed(match_id:int = 2058017) -> pd.DataFrame:
     """
     Retrieves features from match ID from processed dataset

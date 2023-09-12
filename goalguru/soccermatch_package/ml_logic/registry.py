@@ -4,7 +4,7 @@ import time
 import pickle
 
 from colorama import Fore, Style
-from tensorflow import keras
+from sklearn.model_selection import GridSearchCV
 
 from goalguru.soccermatch_package.params import *
 
@@ -32,7 +32,7 @@ def save_results(params: dict,
     print("✅ Results saved locally")
     return None
 
-def save_model(model: keras.Model = None) -> None:
+def save_model(model: GridSearchCV = None) -> None:
     """
     Persist trained model locally on the hard drive at f"{LOCAL_REGISTRY_PATH}/models/{timestamp}.h5"
     """
@@ -47,7 +47,7 @@ def save_model(model: keras.Model = None) -> None:
     print("✅ Model saved locally")
     return None
 
-def load_model()-> keras.Model:
+def load_model()-> GridSearchCV:
     """
     Return a saved model:
     locally (latest one in alphabetical order)

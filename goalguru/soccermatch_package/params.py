@@ -2,12 +2,13 @@ import os
 import numpy as np
 
 
-##################  CONSTANTS  #####################
-LOCAL_DATA_PATH = os.path.join(os.path.expanduser('~'), "code", "jotanavarrete","goalguru", "data")
-PROCESSED_DATA_PATH = os.path.join(os.path.expanduser('~'), "code", "jotanavarrete","goalguru", "data", "processed_data")
-API_DATA_PATH = os.path.join(os.path.expanduser('~'), "code", "jotanavarrete","goalguru", "data", "api_cache")
-RAW_DATA_PATH = os.path.join(os.path.expanduser('~'), "code", "jotanavarrete","goalguru", "data", "raw_data")
-LOCAL_REGISTRY_PATH =  os.path.join(os.path.expanduser('~'), "code", "jotanavarrete","goalguru", "training_outputs")
+##################  PATHS  #####################
+file_path = os.path.dirname(os.path.abspath(__file__))
+LOCAL_DATA_PATH = os.path.join(file_path,'..','..',"data")
+PROCESSED_DATA_PATH = os.path.join(file_path,'..', '..', "data", "processed_data")
+API_DATA_PATH = os.path.join(file_path,'..','..', "data", "api_cache")
+RAW_DATA_PATH = os.path.join(file_path,'..','..', "data", "raw_data")
+LOCAL_REGISTRY_PATH =  os.path.join(file_path,'..','..', "training_outputs")
 
 ##################  CONSTANTS_SOCCMATCH  #####################
 SOCCER_PROJECT = "soccer_match"
