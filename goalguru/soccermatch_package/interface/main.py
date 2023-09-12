@@ -1,14 +1,16 @@
 from goalguru.soccermatch_package.ml_logic import data
 from goalguru.soccermatch_package.params import *
 from goalguru.soccermatch_package.ml_logic.api_connection import get_x_preprocessed
+from goalguru.soccermatch_package.ml_logic.preprocess import scale_x
 
-from sklearn.model_selection import train_test_split
-from goalguru.soccermatch_package.ml_logic.model import initialize_model, train_model, evaluate_model, compile_model
+from goalguru.soccermatch_package.ml_logic.model import initialize_model, train_model, evaluate_model
 from goalguru.soccermatch_package.ml_logic.registry import load_model, save_model, save_results
 
 from pathlib import Path
 from colorama import Fore, Style
 import pandas as pd
+
+from io import StringIO
 
 def preprocess():
     """
@@ -59,9 +61,6 @@ def preprocess():
         print(f"✅ Data processed already")
 
 def train(
-    learning_rate = 0.001,
-    batch_size = 64,
-    patience = 50,
     test_size = 0.3
 ) -> float:
 
@@ -82,30 +81,19 @@ def train(
 
     print(f'X shape: {X.shape},y shape: {y.shape}')
 
-    y = pd.get_dummies(y,prefix = 'Class', dtype = int)
-
-    X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=test_size)
-
-    print(f'X train shape: {X_train.shape}, y train shape: {y_train.shape}')
-
     model = load_model()
 
     if model is None:
-        model = initialize_model(input_shape=X_train.shape[-1])
+        model = initialize_model()
 
-    model = compile_model(model, learning_rate=learning_rate)
-
-    model, history = train_model(
-        model, X_train, y_train,
-        batch_size=batch_size,
-        patience=patience
+    model, val_accu = train_model(
+        model, X, y
     )
-    val_accu = np.max(history.history['val_accuracy'])
 
     params = dict(
         context = 'train',
         training_set_size = data_processed.shape[0],
-        row_count = len(X_train),
+        row_count = len(X)*(1-test_size),
     )
     # Save results on the hard drive using taxifare.ml_logic.registry
     save_results(params=params, metrics=dict(val_accuracy=val_accu))
@@ -130,17 +118,15 @@ def evaluate() -> float:
     X = data_processed[FEATURES]
     y = data_processed[TARGET]
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
 
-    y_test = pd.get_dummies(y_test,prefix = 'Class', dtype = int)
-
-    metrics_dict = evaluate_model(model=model, X=X_test, y=y_test)
-    accuracy = metrics_dict["accuracy"]
+    metrics_dict = {}
+    accuracy = evaluate_model(model=model, X=X, y=y)
+    metrics_dict['accuracy'] = accuracy
 
     params = dict(
         context = 'evauate',
         training_set_size = data_processed.shape[0],
-        row_count = len(X_test)
+        row_count = len(X)
     )
     save_results(params=params, metrics=metrics_dict)
 
@@ -157,12 +143,14 @@ def pred(X_pred: pd.DataFrame = None) -> np.ndarray:
 
     if X_pred is None:
         print('❌ X not valid: showing case example')
-        X_pred = pd.read_json(get_x_preprocessed(2058017))
+        X_pred = pd.read_json(StringIO(get_x_preprocessed(2058013)))
+
     model = load_model()
     assert model is not None
 
-    X_processed = X_pred
-    y_pred = model.predict(X_processed)
+    X_processed = scale_x(X_pred)
+    y_pred = model.predict_proba(X_processed)
 
-    print("\n✅ prediction done: ", y_pred, "\n")
+    print(Fore.BLUE + f"Getting prediction..." + Style.RESET_ALL)
+    print("✅ prediction done: ", y_pred, "\n")
     return y_pred
