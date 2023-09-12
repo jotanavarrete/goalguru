@@ -10,26 +10,41 @@ def load_data():
     Retrieve matches data, events data, playerank data, and teams data from
     local data path
     """
-    data_directory = Path(RAW_DATA_PATH).joinpath(SOCCER_PROJECT)
-    events_directory = os.path.join(data_directory, 'events')
-    matches_directory = os.path.join(data_directory, 'matches')
-    other_directory = os.path.join(data_directory, 'other')
+    processed_data_path = Path(PROCESSED_DATA_PATH).joinpath(SOCCER_PROJECT)
+    merged_data_path = Path(processed_data_path).joinpath(f'{SOCCER_PROJECT}-leagues_merged.csv')
+    if not merged_data_path.is_file():
 
-    events_file_names = os.listdir(events_directory)
-    matches_file_names = os.listdir(matches_directory)
+        print("------ Loading data ------")
+        data_directory = Path(RAW_DATA_PATH).joinpath(SOCCER_PROJECT)
+        events_directory = os.path.join(data_directory, 'events')
+        matches_directory = os.path.join(data_directory, 'matches')
+        other_directory = os.path.join(data_directory, 'other')
 
-    def read_jsons(directory:Path, file_names:list, replace = ''):
-        df ={}
-        for file_name in file_names:
-            df[f"{file_name.replace(f'{replace}_','').replace('.json','')}"] = pd.read_json(os.path.join(directory,file_name))
-        return df
-    matches = read_jsons(matches_directory, matches_file_names, 'matches')
-    events = read_jsons(events_directory, events_file_names, 'events')
-    playerank = pd.read_json(os.path.join(other_directory,'playerank.json'))
-    teams = pd.read_json(os.path.join(other_directory,'teams.json'))
+        events_file_names = os.listdir(events_directory)
+        matches_file_names = os.listdir(matches_directory)
 
-    print("✅ matches, events, playerrank and teams loaded")
-    return matches, events, playerank, teams
+        def read_jsons(directory:Path, file_names:list, replace = ''):
+            df ={}
+            print(f'--------------------------')
+            print(f'Working on {replace}:')
+            for file_name in file_names:
+                print(f'Working on {file_name.replace(".json","")}')
+                df[f"{file_name.replace(f'{replace}_','').replace('.json','')}"] = pd.read_json(os.path.join(directory,file_name))
+            return df
+
+        matches = read_jsons(matches_directory, matches_file_names, 'matches')
+        events = read_jsons(events_directory, events_file_names, 'events')
+        print(f'--------------------------')
+        print('Working on playerank...')
+        playerank = pd.read_json(os.path.join(other_directory,'playerank.json'))
+        print(f'--------------------------')
+        print('Working on teams...\n')
+        teams = pd.read_json(os.path.join(other_directory,'teams.json'))
+
+        print("✅ Data loaded: matches, events, playerrank and teams loaded\n")
+        return matches, events, playerank, teams
+    else:
+        return None
 
 def merge_data(matches:pd.DataFrame,
                events: pd.DataFrame,
@@ -52,42 +67,55 @@ def merge_data(matches:pd.DataFrame,
     Re
 
     """
+    processed_data_path = Path(PROCESSED_DATA_PATH).joinpath(SOCCER_PROJECT)
+    merged_data_path = Path(processed_data_path).joinpath(f'{SOCCER_PROJECT}-leagues_merged.csv')
     leagues = []
     #For each league we merge with events, teams, and playerank
-    for league in matches.keys():
+    print("------ Merging data ------")
+    print('--------------------------')
+    if not merged_data_path.is_file():
+        for league in matches.keys():
 
-        league_events = events[league]
-        league_encoded = encoders.accurate_not_accurate(league_events)
-        liga = matches[league][COLUMN_NAMES_RAW]
-        liga = liga.rename(columns = {'wyId':'matchId'}).copy()
+            league_events = events[league]
+            league_encoded = encoders.accurate_not_accurate(league_events)
+            liga = matches[league][COLUMN_NAMES_RAW]
+            liga = liga.rename(columns = {'wyId':'matchId'}).copy()
 
 
-        #We get homeId and awayId to retrieve names and events
-        liga = encoders.create_home_away_cols(liga)
-        #We get events for every team in a match
-        liga = merges.matches_events(liga, league_encoded)
-        #We retrieve names
-        liga = merges.get_home_away_names(liga,teams)
-        #We retrieve matchrank
-        liga = merges.get_avg_playerank(liga, playerank)
-        #We retrieve gaols
-        liga = encoders.get_goals(liga)
-        #We get accuracies
-        liga = encoders.accuracy_features(liga)
-        #We get target
-        liga = encoders.matches_target(liga)
+            #We get homeId and awayId to retrieve names and events
+            liga = encoders.create_home_away_cols(liga)
+            #We get events for every team in a match
+            liga = merges.matches_events(liga, league_encoded)
+            #We retrieve names
+            liga = merges.get_home_away_names(liga,teams)
+            #We retrieve matchrank
+            liga = merges.get_avg_playerank(liga, playerank)
+            #We retrieve gaols
+            liga = encoders.get_goals(liga)
+            #We get accuracies
+            liga = encoders.accuracy_features(liga)
+            #We get target
+            liga = encoders.matches_target(liga)
 
-        #We append to list of ligas (leagues)
-        leagues.append(liga)
+            #We append to list of ligas (leagues)
+            leagues.append(liga)
 
-        print(f"✅ {league} done!")
+            print(f"✅ {league} done!")
 
-    #We stack each league vertically
-    all_leagues = pd.DataFrame(columns = leagues[0].keys())
-    for liga in leagues:
-        all_leagues = pd.concat([all_leagues, liga], axis = 0)
-    #return
-    print("✅ Dataset complete: all_matches dataset built")
+        #We stack each league vertically
+        all_leagues = pd.DataFrame(columns = leagues[0].keys())
+        for liga in leagues:
+            all_leagues = pd.concat([all_leagues, liga], axis = 0)
+        #return
+        print(f'--------------------------')
+        print("✅ Dataset complete: all_matches dataset built\n")
+        save_data(all_leagues,
+                f'{SOCCER_PROJECT}-leagues_merged.csv',
+                processed_data_path,
+                'Saved merged lists locally')
+        return all_leagues
+    else:
+        all_leagues = pd.read_csv(merged_data_path)
     return all_leagues
 
 
@@ -96,8 +124,10 @@ def clean_data(matches: pd.DataFrame) -> pd.DataFrame:
     Clean raw data by
     dropping Nan values from relevant features
     """
+    print("------ Cleaning data ------")
+    print(f'--------------------------')
     matches = matches.dropna(subset = FEATURES)
-    print("✅ Data cleaned")
+    print("✅ Data cleaned\n")
     return matches
 
 
@@ -107,11 +137,13 @@ def create_features(all_matches:pd.DataFrame) -> pd.DataFrame:
 
     Returns dataframe with features
     """
+    print("------ Creating features ------")
+    print('-------------------------------')
     matches = all_matches.copy()
     #Get accuracy features
     matches = features.get_features(matches)
 
-    print("✅ Features created")
+    print("✅ Features created \n")
     return matches
 def create_features1(all_matches:pd.DataFrame) -> pd.DataFrame:
     """
