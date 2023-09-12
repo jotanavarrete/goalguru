@@ -210,3 +210,127 @@ def get_performance(matches:pd.DataFrame) -> pd.DataFrame:
     matches['avgHomePassAccuLast10Games'],matches['avgHomeShotAccuLast10Games'] = home_pass_accu, home_shot_accu
     matches['avgAwayPassAccuLast10Games'],matches['avgAwayShotAccuLast10Games'] = away_pass_accu, away_shot_accu
     return matches
+
+def get_features(matches):
+    def get_features_for_team(team: int,
+                                   home: bool,
+                                   as_home: bool,
+                                   index):
+
+        condition_draw = matches['homeWins'] == 0
+        if home:
+            team_str = 'home_'
+        else:
+            team_str = 'away_'
+        if as_home:
+            as_str = 'as_home_'
+            condition_team = matches['homeId'] == team
+            like = 'homeId'
+            condition_win = matches['homeWins'] == 1
+            condition_loses = matches['homeWins'] == -1
+            pass_accuracy = 'homePassAccuracy'
+            shot_accuracy = 'homeShotAccuracy'
+            passes = 'totalHomePasses'
+            accu_passes = 'accurateHomePasses'
+            shots = 'totalHomeShots'
+            accu_shots = 'accurateHomeShots'
+            goals = 'homeScore'
+            goals_in = 'awayScore'
+            matchrank = 'homeTeam_matchRank'
+            wins = 'homeWins'
+
+        else:
+            as_str = 'as_away_'
+            condition_team = matches['awayId'] == team
+            like = 'awayId'
+            condition_win = matches['homeWins'] == -1
+            condition_loses = matches['homeWins'] == 1
+            pass_accuracy = 'awayPassAccuracy'
+            shot_accuracy = 'awayShotAccuracy'
+            passes = 'totalAwayPasses'
+            accu_passes = 'accurateAwayPasses'
+            shots = 'totalAwayShots'
+            accu_shots = 'accurateAwayShots'
+            goals = 'awayScore'
+            goals_in = 'homeScore'
+            matchrank = 'awayTeam_matchRank'
+            wins = 'homeWins'
+
+        #logic
+        try:
+            condition = (matches[(condition_team) & condition_date].head(10).shape[0] < 11) & (matches[condition_team & condition_date].head(10).shape[0] > 0)
+            inputer = 0
+        except:
+            condition = True
+            inputer = None
+        if condition:
+            try:
+                matches.loc[index, f'last_10_{team_str}{as_str}avg_pass_accu'] = matches[(condition_team) & condition_date].head(10)[[like, pass_accuracy]].groupby(like).mean().loc[team,pass_accuracy]
+            except:
+                matches.loc[index, f'last_10_{team_str}{as_str}avg_pass_accu'] = inputer
+            try:
+                matches.loc[index, f'last_10_{team_str}{as_str}avg_shot_accu'] = matches[(condition_team) & condition_date].head(10)[[like, shot_accuracy]].groupby(like).mean().loc[team,shot_accuracy]
+            except:
+                matches.loc[index, f'last_10_{team_str}{as_str}avg_shot_accu'] = inputer
+            try:
+                matches.loc[index, f'last_10_{team_str}{as_str}avg_total_passes'] = matches[(condition_team) & condition_date].head(10)[[like, passes]].groupby(like).mean().loc[team,passes]
+            except:
+                matches.loc[index, f'last_10_{team_str}{as_str}avg_total_passes'] = inputer
+            try:
+                matches.loc[index, f'last_10_{team_str}{as_str}avg_total_accu_passes'] = matches[(condition_team) & condition_date].head(10)[[like, accu_passes]].groupby(like).mean().loc[team,accu_passes]
+            except:
+                matches.loc[index, f'last_10_{team_str}{as_str}avg_total_accu_passes'] = inputer
+            try:
+                matches.loc[index, f'last_10_{team_str}{as_str}avg_total_shots'] = matches[(condition_team) & condition_date].head(10)[[like, shots]].groupby(like).mean().loc[team,shots]
+            except:
+                matches.loc[index, f'last_10_{team_str}{as_str}avg_total_shots'] = inputer
+            try:
+                matches.loc[index, f'last_10_{team_str}{as_str}avg_total_accu_shots'] = matches[(condition_team) & condition_date].head(10)[[like, accu_shots]].groupby(like).mean().loc[team,accu_shots]
+            except:
+                matches.loc[index, f'last_10_{team_str}{as_str}avg_total_accu_shots'] = inputer
+            try:
+                matches.loc[index, f'last_10_{team_str}{as_str}avg_total_goals'] = matches[(condition_team) & condition_date].head(10)[[like, goals]].groupby(like).mean().loc[team,goals]
+            except:
+                matches.loc[index, f'last_10_{team_str}{as_str}avg_total_goals'] = inputer
+            try:
+                matches.loc[index, f'last_10_{team_str}{as_str}avg_total_goals_in'] = matches[(condition_team) & condition_date].head(10)[[like, goals_in]].groupby(like).mean().loc[team,goals_in]
+            except:
+                matches.loc[index, f'last_10_{team_str}{as_str}avg_total_goals_in'] = inputer
+            try:
+                matches.loc[index, f'last_10_{team_str}{as_str}avg_matchranks'] = matches[(condition_team) & condition_date].head(10)[[like, matchrank]].groupby(like).mean().loc[team,matchrank]
+            except:
+                matches.loc[index, f'last_10_{team_str}{as_str}avg_matchranks'] = inputer
+            try:
+                matches.loc[index, f'last_10_{team_str}{as_str}total_wins'] = matches[condition_team & condition_date & condition_win].head(10)[[like, wins]].groupby(like).count().loc[team,wins]
+            except:
+                matches.loc[index, f'last_10_{team_str}{as_str}total_wins'] = inputer
+            try:
+                matches.loc[index, f'last_10_{team_str}{as_str}total_draws'] = matches[condition_team & condition_date & condition_draw].head(10)[[like, wins]].groupby(like).count().loc[team, wins]
+            except:
+                matches.loc[index, f'last_10_{team_str}{as_str}total_draws'] = inputer
+            try:
+                matches.loc[index, f'last_10_{team_str}{as_str}total_loses'] = matches[condition_team & condition_date & condition_loses].head(10)[[like, wins]].groupby(like).count().loc[team,wins]
+            except:
+                matches.loc[index, f'last_10_{team_str}{as_str}total_loses'] = inputer
+            try:
+                matches.loc[index, f'last_10_{team_str}{as_str}win_ratio'] = matches.loc[index, f'last_10_{team_str}{as_str}total_wins'] / (matches.loc[index, f'last_10_{team_str}{as_str}total_wins'] +
+                                                                                                                                        matches.loc[index, f'last_10_{team_str}{as_str}total_draws']+
+                                                                                                                                           matches.loc[index, f'last_10_{team_str}{as_str}total_loses'])
+            except:
+                matches.loc[index, f'last_10_{team_str}{as_str}win_ratio'] = inputer
+            else:
+                pass
+        return matches
+
+    for index,row in matches.iterrows():
+        home_id = matches['homeId'].iloc[index]
+        away_id = matches['awayId'].iloc[index]
+        date = matches['dateutc'].iloc[index]
+
+        condition_date = matches['dateutc']<date
+
+        get_features_for_team(home_id, True, True, index)
+        get_features_for_team(home_id, True, False, index)
+        get_features_for_team(away_id, False, True, index)
+        get_features_for_team(away_id, False, False, index)
+    return matches

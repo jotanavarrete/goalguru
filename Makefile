@@ -12,13 +12,14 @@ run_api:
 run_preprocess:
 	python -c 'from goalguru.soccermatch_package.interface.main import preprocess; preprocess()'
 
+# run_api:
+	# python -c 'from goalguru.soccermatch_package.ml_logic.api_connection import *; get_results()'
 
-#reset_local_files:
-#	rm -rf ${ML_DIR}
-#	mkdir -p ~/.lewagon/mlops/data/
-#	mkdir ~/.lewagon/mlops/data/raw
-#	mkdir ~/.lewagon/mlops/data/processed
-#	mkdir ~/.lewagon/mlops/training_outputs
-#	mkdir ~/.lewagon/mlops/training_outputs/metrics
-#	mkdir ~/.lewagon/mlops/training_outputs/models
-#	mkdir ~/.lewagon/mlops/training_outputs/params
+run_train:
+	python -c 'from goalguru.soccermatch_package.interface.main import train; train()'
+
+run_evaluate:
+	python -c 'from goalguru.soccermatch_package.interface.main import evaluate; evaluate()'
+
+run_pred:
+	python -c 'from goalguru.soccermatch_package.interface.main import pred; pred()'

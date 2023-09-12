@@ -9,6 +9,7 @@ VALID_COMPETITIONS_PATH = os.path.join(file_path, proccesed_data_path, 'competit
 MATCHES_PATH = os.path.join(file_path, raw_data_path, 'matches')
 EVENTS_PATH = os.path.join(file_path, raw_data_path, 'events')
 REQUEST_PATH = os.path.join(file_path, proccesed_data_path, 'request')
+PREPROCESSED_PATH = os.path.join(file_path, proccesed_data_path, 'preprocessed')
 
 # COLUMNS
 COLS_DROP_CLEAN = ['match_status', 'match_status_360', 'last_updated', 'last_updated_360', 'metadata', 'stadium', 'referee']

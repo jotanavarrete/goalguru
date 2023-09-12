@@ -2,6 +2,7 @@ from goalguru.soccermatch_package.ml_logic.data import load_processed_data
 from goalguru.soccermatch_package.params import *
 from goalguru.soccermatch_package.utils import save_json, read_json
 from pathlib import Path
+import pandas as pd
 
 
 def get_competitions() -> list:
@@ -135,3 +136,22 @@ def get_results(match_id : int) -> dict:
     else:
         result = read_json(path)
         return result
+
+def get_x_preprocessed(match_id:int = 2058017) -> pd.DataFrame:
+    """
+    Retrieves features from match ID from processed dataset
+    If file containing the features already created it retrieves from
+    the cache path, if not it creates it
+
+    Returns dataframe with all features for the match
+
+    """
+    path = Path(API_DATA_PATH).joinpath(SOCCER_PROJECT, f'features_{match_id}.json')
+    if not path.is_file():
+        dataset = load_processed_data()
+        features = dataset[dataset['matchId'] == match_id][FEATURES].to_json()
+        save_json(features, path)
+        return features
+    else:
+        features = read_json(path)
+        return features

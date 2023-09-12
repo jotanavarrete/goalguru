@@ -97,12 +97,15 @@ def save_matches():
             matches_df = read_matches(int(competition_id), int(season_id))
 
             for matchweek in matchweeks:
-                actual_match_df = matches_df.query(f'match_week == {matchweek}')[['match_id', 'home_team', 'away_team']]
+                actual_match_df = matches_df.query(f'match_week == {matchweek}')[['match_id', 'home_team', 'away_team', 'home_score', 'away_score']]
                 actual_match_df.loc[:, 'home_team'] = actual_match_df.loc[:, 'home_team'].map(lambda x: x.get('home_team_name'))
                 actual_match_df.loc[:, 'away_team'] = actual_match_df.loc[:, 'away_team'].map(lambda x: x.get('away_team_name'))
                 actual_match_df.loc[:, 'name'] = actual_match_df.loc[:, 'home_team'] + ' vs ' + actual_match_df.loc[:, 'away_team']
+                actual_match_df.loc[:, 'result'] = actual_match_df.loc[:, 'home_team'] + ' ' + \
+                    actual_match_df.loc[:, 'home_score'].map(str) + ' - ' + \
+                        + actual_match_df.loc[:, 'away_score'].map(str) + ' ' + actual_match_df.loc[:, 'away_team']
 
-                matches_list = actual_match_df.to_dict('records')
+                matches_list = actual_match_df.drop(columns=['home_score', 'away_score']).to_dict('records')
                 matchweeks_dict[matchweek] = matches_list
 
 
