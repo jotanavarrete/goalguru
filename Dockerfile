@@ -1,4 +1,5 @@
 ####### 👇 OPTIMIZED SOLUTION (x86)👇 #######
+## cada vez que cambio el dockerfile, tengo que correr la imagen
 
 # tensorflow base-images are optimized: lighter than python-buster + pip install tensorflow
 #FROM tensorflow/tensorflow:2.10.0
