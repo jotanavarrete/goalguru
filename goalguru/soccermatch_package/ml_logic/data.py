@@ -145,27 +145,6 @@ def create_features(all_matches:pd.DataFrame) -> pd.DataFrame:
 
     print("✅ Features created \n")
     return matches
-def create_features1(all_matches:pd.DataFrame) -> pd.DataFrame:
-    """
-    Create relevant features for model
-    [
-    'avgHomePassAccuLast10Games','avgHomeShotAccuLast10Games',
-    'avgAwayPassAccuLast10Games','avgAwayShotAccuLast10Games',
-    'homeWRlast10Games', 'awayWRlast10Games',
-    'homeLast10AvgRank', 'awayLast10AvgRank'
-    ]
-    Returns dataframe with features
-    """
-    matches = all_matches.copy()
-    #Get accuracy features
-    matches = features.get_performance(matches)
-    #Get matchranks features
-    matches = features.get_last_matchranks(matches)
-    #Get WR features
-    matches = features.get_wr(matches)
-
-    print("✅ Features 1 created")
-    return matches
 
 def save_data(
         data: pd.DataFrame,
