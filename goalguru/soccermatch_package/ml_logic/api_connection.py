@@ -106,6 +106,7 @@ def get_matches(competition_id : int,
             m['name'] = f"{matches_filt.loc[index, 'homeTeam']} vs {matches_filt.loc[index, 'awayTeam']}"
             m['home_team'] = matches_filt.loc[index, 'homeTeam']
             m['away_team'] = matches_filt.loc[index, 'awayTeam']
+            m['result'] = f"{matches_filt.loc[index, 'homeTeam']} {matches_filt.loc[index, 'homeScore']} - {matches_filt.loc[index, 'awayTeam']} {matches_filt.loc[index, 'awayScore']}"
             match_l.append(m)
         save_json(match_l,path)
         return match_l
