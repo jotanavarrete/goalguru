@@ -4,7 +4,7 @@ import time
 import pickle
 
 from colorama import Fore, Style
-from tensorflow import keras
+from sklearn.model_selection import GridSearchCV
 
 from goalguru.soccermatch_package.params import *
 
@@ -32,7 +32,7 @@ def save_results(params: dict,
     print("✅ Results saved locally")
     return None
 
-def save_model(model: keras.Model = None) -> None:
+def save_model(model: GridSearchCV = None) -> None:
     """
     Persist trained model locally on the hard drive at f"{LOCAL_REGISTRY_PATH}/models/{timestamp}.h5"
     """
@@ -47,12 +47,11 @@ def save_model(model: keras.Model = None) -> None:
     print("✅ Model saved locally")
     return None
 
-def load_model()-> keras.Model:
+def load_model()-> GridSearchCV:
     """
     Return a saved model:
     locally (latest one in alphabetical order)
     """
-    print(Fore.BLUE + f"\nLoad latest model from local registry..." + Style.RESET_ALL)
     # Get the latest model version name by the timestamp on disk
     local_model_directory = os.path.join(LOCAL_REGISTRY_PATH, "models")
     local_model_paths = glob.glob(f"{local_model_directory}/*")
@@ -62,7 +61,7 @@ def load_model()-> keras.Model:
 
     most_recent_model_path_on_disk = sorted(local_model_paths)[-1]
 
-    print(Fore.BLUE + f"\nLoad latest model from disk..." + Style.RESET_ALL)
+    print(Fore.BLUE + f"Load latest model from disk..." + Style.RESET_ALL)
 
     with open(most_recent_model_path_on_disk, 'rb') as file:
         latest_model = pickle.load(file)
@@ -70,3 +69,24 @@ def load_model()-> keras.Model:
     print("✅ Model loaded from local disk")
 
     return latest_model
+
+def load_scaler() -> pickle:
+    """
+    Return a saved scaler:
+    locally (latest one in alphabetical order)
+    """
+    local_scaler_directory = os.path.join(LOCAL_REGISTRY_PATH, "scalers")
+    local_scaler_paths = glob.glob(f"{local_scaler_directory}/*")
+
+    if not local_scaler_paths:
+        return None
+
+    print(Fore.BLUE + f"\nLoad latest scaler from disk..." + Style.RESET_ALL)
+
+    most_recent_scaler_path_on_disk = sorted(local_scaler_paths)[-1]
+    with open(most_recent_scaler_path_on_disk, 'rb') as file:
+        scaler = pickle.load(file)
+
+    print("✅ Scaler loaded from local disk\n")
+
+    return scaler

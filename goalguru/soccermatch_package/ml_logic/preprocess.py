@@ -1,6 +1,7 @@
-from sklearn.preprocessing import RobustScaler
-from goalguru.soccermatch_package.ml_logic.data import load_processed_data
 from goalguru.soccermatch_package.params import *
+from goalguru.soccermatch_package.ml_logic.registry import load_scaler
+
+from colorama import Fore, Style
 
 def scale_x(X):
     '''
@@ -8,13 +9,9 @@ def scale_x(X):
 
     Return X scaled
     '''
-    data_processed = load_processed_data()
 
-    x_processed = data_processed[FEATURES]
-
-    scaler = RobustScaler()
-    scaler.fit_transform(x_processed)
-
+    scaler = load_scaler()
+    print(Fore.BLUE + f"Scaling X..." + Style.RESET_ALL)
     X = scaler.transform(X)
-
+    print("✅ X scaled correctly\n")
     return X

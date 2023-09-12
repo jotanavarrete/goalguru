@@ -3,15 +3,14 @@ from goalguru.soccermatch_package.params import *
 from goalguru.soccermatch_package.ml_logic.api_connection import get_x_preprocessed
 from goalguru.soccermatch_package.ml_logic.preprocess import scale_x
 
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import RobustScaler
-
 from goalguru.soccermatch_package.ml_logic.model import initialize_model, train_model, evaluate_model
 from goalguru.soccermatch_package.ml_logic.registry import load_model, save_model, save_results
 
 from pathlib import Path
 from colorama import Fore, Style
 import pandas as pd
+
+from io import StringIO
 
 def preprocess():
     """
@@ -82,23 +81,19 @@ def train(
 
     print(f'X shape: {X.shape},y shape: {y.shape}')
 
-    X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=test_size)
-
-    print(f'X train shape: {X_train.shape}, y train shape: {y_train.shape}')
-
     model = load_model()
 
     if model is None:
         model = initialize_model()
 
     model, val_accu = train_model(
-        model, X_train, y_train
+        model, X, y
     )
 
     params = dict(
         context = 'train',
         training_set_size = data_processed.shape[0],
-        row_count = len(X_train),
+        row_count = len(X)*(1-test_size),
     )
     # Save results on the hard drive using taxifare.ml_logic.registry
     save_results(params=params, metrics=dict(val_accuracy=val_accu))
@@ -123,16 +118,15 @@ def evaluate() -> float:
     X = data_processed[FEATURES]
     y = data_processed[TARGET]
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
 
     metrics_dict = {}
-    accuracy = evaluate_model(model=model, X=X_test, y=y_test)
+    accuracy = evaluate_model(model=model, X=X, y=y)
     metrics_dict['accuracy'] = accuracy
 
     params = dict(
         context = 'evauate',
         training_set_size = data_processed.shape[0],
-        row_count = len(X_test)
+        row_count = len(X)
     )
     save_results(params=params, metrics=metrics_dict)
 
@@ -149,12 +143,14 @@ def pred(X_pred: pd.DataFrame = None) -> np.ndarray:
 
     if X_pred is None:
         print('❌ X not valid: showing case example')
-        X_pred = pd.read_json(get_x_preprocessed(2058013))
+        X_pred = pd.read_json(StringIO(get_x_preprocessed(2058013)))
+
     model = load_model()
     assert model is not None
 
     X_processed = scale_x(X_pred)
     y_pred = model.predict_proba(X_processed)
 
-    print("\n✅ prediction done: ", y_pred, "\n")
+    print(Fore.BLUE + f"Getting prediction..." + Style.RESET_ALL)
+    print("✅ prediction done: ", y_pred, "\n")
     return y_pred
