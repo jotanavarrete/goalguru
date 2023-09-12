@@ -6,6 +6,12 @@ from typing import Tuple
 
 from tensorflow import keras
 
+from sklearn.linear_model import SGDClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+from sklearn.preprocessing import RobustScaler
+from sklearn.model_selection import GridSearchCV
+
 # Timing the TensorFlow import
 print(Fore.BLUE + "\nLoading TensorFlow..." + Style.RESET_ALL)
 start = time.perf_counter()
@@ -20,42 +26,21 @@ print(f"\n✅ TensorFlow loaded ({round(end - start, 2)}s)")
 
 ## Functions for the model
 
-def initialize_model(input_shape: tuple) -> Model:
+def initialize_model() -> Model:
     """
     Initialize the Neural Network with random weights
     """
 
-    model = Sequential()
-    model.add(layers.BatchNormalization())
-    model.add(layers.Dense(120, input_dim = input_shape, activation = 'relu'))
-    model.add(layers.Dense(80, activation = 'relu'))
-    model.add(layers.Dense(40, activation = 'relu'))
-    model.add(layers.Dense(20, activation = 'relu'))
-    model.add(layers.Dense(12, activation = 'relu'))
-    model.add(layers.Dense(6, activation = 'relu'))
-    model.add(layers.Dropout(0.2))
-    model.add(layers.Dense(4, activation = 'relu'))
-    #model.add(layers.Dropout(0.1))
-    model.add(layers.Dense(3, activation = 'softmax'))
+    params = {
+    "loss" : ["hinge", "modified_huber"],
+    "alpha" : [0.001,0.01, 0.1],
+    "penalty" : ["l2", "l1", "elasticnet"],
+}
+    clf = SGDClassifier(max_iter=10000)
+    model = GridSearchCV(clf, param_grid=params, cv=5, n_jobs = -1)
+
 
     print("✅ Model initialized")
-
-    return model
-
-
-
-def compile_model(model: Model, learning_rate=0.001) -> Model:
-    """
-    Compile the Neural Network
-    """
-    optimizer = keras.optimizers.SGD(learning_rate=learning_rate)
-    model.compile(
-    loss = 'categorical_crossentropy',
-    optimizer = optimizer,
-    metrics = 'accuracy'
-    )
-
-    print("✅ Model compiled")
 
     return model
 
@@ -65,9 +50,6 @@ def train_model(
         model: Model,
         X: np.ndarray,
         y: np.ndarray,
-        batch_size=64,
-        patience=50,
-        validation_data=None, # overrides validation_split
         validation_split=0.3
     ) -> Tuple[Model, dict]:
     """
@@ -75,27 +57,21 @@ def train_model(
     """
     print(Fore.BLUE + "\nTraining model..." + Style.RESET_ALL)
 
-    es = EarlyStopping(
-        monitor="val_loss",
-        patience=patience,
-        restore_best_weights=True
-    )
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=validation_split)
+
+    scaler = RobustScaler()
+    X_train = scaler.fit_transform(X_train)
+    X_test = scaler.transform(X_test)
+
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+
+    val_accuracy = accuracy_score(y_test, y_pred)
 
 
-    history = model.fit(
-        X,
-        y,
-        validation_split = validation_split,
-        validation_data=validation_data,
-        shuffle = True,
-        epochs = 200,
-        batch_size =  batch_size,
-        verbose = 0,
-        callbacks = [es]
-    )
-    print(f"✅ Model trained on {len(X)} rows with accuracy: {round(np.max(history.history['val_accuracy']), 2)}")
+    print(f"✅ Model trained on {len(X)} rows with accuracy: {round(val_accuracy, 2)}")
 
-    return model, history
+    return model, val_accuracy
 
 
 
@@ -115,18 +91,10 @@ def evaluate_model(
         print(f"\n❌ No model to evaluate")
         return None
 
-    metrics = model.evaluate(
-        x=X,
-        y=y,
-        batch_size=batch_size,
-        verbose=0,
-        callbacks=None,
-        return_dict=True
-    )
+    y_pred = model.predict(X)
+    accuracy = accuracy_score(y, y_pred)
 
-    loss = metrics["loss"]
-    accuracy = metrics["accuracy"]
 
     print(f"✅ Model evaluated, accuracy: {round(accuracy, 2)}")
 
-    return metrics
+    return accuracy

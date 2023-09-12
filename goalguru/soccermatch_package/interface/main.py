@@ -1,9 +1,12 @@
 from goalguru.soccermatch_package.ml_logic import data
 from goalguru.soccermatch_package.params import *
 from goalguru.soccermatch_package.ml_logic.api_connection import get_x_preprocessed
+from goalguru.soccermatch_package.ml_logic.preprocess import scale_x
 
 from sklearn.model_selection import train_test_split
-from goalguru.soccermatch_package.ml_logic.model import initialize_model, train_model, evaluate_model, compile_model
+from sklearn.preprocessing import RobustScaler
+
+from goalguru.soccermatch_package.ml_logic.model import initialize_model, train_model, evaluate_model
 from goalguru.soccermatch_package.ml_logic.registry import load_model, save_model, save_results
 
 from pathlib import Path
@@ -21,22 +24,28 @@ def preprocess():
 
     processed_data_path = Path(PROCESSED_DATA_PATH).joinpath(SOCCER_PROJECT)
     data_query_cache_path = Path(processed_data_path).joinpath(f"{SOCCER_PROJECT}-matches_processed.csv")
+    merged_data_path = Path(processed_data_path).joinpath(f'{SOCCER_PROJECT}-leagues_merged.csv')
     if not data_query_cache_path.is_file():
-        matches, events, playerank, teams = data.load_data()
+        if not merged_data_path.is_file():
+            matches, events, playerank, teams = data.load_data()
+            all_matches =data.merge_data(matches,
+                                        events,
+                                        playerank,
+                                        teams)
+        else:
+            all_matches = pd.read_csv(merged_data_path)
 
-        all_matches =data.merge_data(matches,
-                                    events,
-                                    playerank,
-                                    teams)
 
+        #all_matches = data.create_features(all_matches)
         all_matches = data.create_features(all_matches)
-        all_matches = data.create_features1(all_matches)
 
         matches_cleaned = data.clean_data(all_matches)
 
         X = matches_cleaned[FEATURES]
         y = matches_cleaned[TARGET]
 
+        print("------ Saving data ------")
+        print('-------------------------')
         data.save_data(matches_cleaned,
                        f'{SOCCER_PROJECT}-matches_processed.csv',
                        processed_data_path,
@@ -53,9 +62,6 @@ def preprocess():
         print(f"✅ Data processed already")
 
 def train(
-    learning_rate = 0.001,
-    batch_size = 64,
-    patience = 50,
     test_size = 0.3
 ) -> float:
 
@@ -76,8 +82,6 @@ def train(
 
     print(f'X shape: {X.shape},y shape: {y.shape}')
 
-    y = pd.get_dummies(y,prefix = 'Class', dtype = int)
-
     X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=test_size)
 
     print(f'X train shape: {X_train.shape}, y train shape: {y_train.shape}')
@@ -85,16 +89,11 @@ def train(
     model = load_model()
 
     if model is None:
-        model = initialize_model(input_shape=X_train.shape[-1])
+        model = initialize_model()
 
-    model = compile_model(model, learning_rate=learning_rate)
-
-    model, history = train_model(
-        model, X_train, y_train,
-        batch_size=batch_size,
-        patience=patience
+    model, val_accu = train_model(
+        model, X_train, y_train
     )
-    val_accu = np.max(history.history['val_accuracy'])
 
     params = dict(
         context = 'train',
@@ -126,10 +125,9 @@ def evaluate() -> float:
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
 
-    y_test = pd.get_dummies(y_test,prefix = 'Class', dtype = int)
-
-    metrics_dict = evaluate_model(model=model, X=X_test, y=y_test)
-    accuracy = metrics_dict["accuracy"]
+    metrics_dict = {}
+    accuracy = evaluate_model(model=model, X=X_test, y=y_test)
+    metrics_dict['accuracy'] = accuracy
 
     params = dict(
         context = 'evauate',
@@ -151,13 +149,12 @@ def pred(X_pred: pd.DataFrame = None) -> np.ndarray:
 
     if X_pred is None:
         print('❌ X not valid: showing case example')
-        X_pred = pd.read_json(get_x_preprocessed(2058017))
+        X_pred = pd.read_json(get_x_preprocessed(2058013))
     model = load_model()
     assert model is not None
 
-    X_processed = X_pred
-    y_pred = model.predict(X_processed)
+    X_processed = scale_x(X_pred)
+    y_pred = model.predict_proba(X_processed)
 
     print("\n✅ prediction done: ", y_pred, "\n")
-    breakpoint()
     return y_pred

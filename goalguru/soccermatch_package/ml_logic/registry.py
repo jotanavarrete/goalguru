@@ -41,7 +41,8 @@ def save_model(model: keras.Model = None) -> None:
 
     # Save model locally
     model_path = os.path.join(LOCAL_REGISTRY_PATH, "models", f"{timestamp}.h5")
-    model.save(model_path)
+    with open(model_path, 'wb') as file:
+        pickle.dump(model,file)
 
     print("✅ Model saved locally")
     return None
@@ -63,7 +64,8 @@ def load_model()-> keras.Model:
 
     print(Fore.BLUE + f"\nLoad latest model from disk..." + Style.RESET_ALL)
 
-    latest_model = keras.models.load_model(most_recent_model_path_on_disk)
+    with open(most_recent_model_path_on_disk, 'rb') as file:
+        latest_model = pickle.load(file)
 
     print("✅ Model loaded from local disk")
 
