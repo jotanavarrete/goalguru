@@ -9,6 +9,19 @@ API_DATA_PATH = os.path.join(os.path.expanduser('~'), "code", "jotanavarrete","g
 RAW_DATA_PATH = os.path.join(os.path.expanduser('~'), "code", "jotanavarrete","goalguru", "data", "raw_data")
 LOCAL_REGISTRY_PATH =  os.path.join(os.path.expanduser('~'), "code", "jotanavarrete","goalguru", "training_outputs")
 
+
+MODEL_TARGET = os.environ.get("MODEL_TARGET")
+GCP_PROJECT = os.environ.get("GCP_PROJECT")
+#GCP_PROJECT_WAGON = os.environ.get("GCP_PROJECT_WAGON")
+GCP_REGION = os.environ.get("GCP_REGION")
+#BQ_DATASET = os.environ.get("BQ_DATASET")
+#BQ_REGION = os.environ.get("BQ_REGION")
+BUCKET_NAME = os.environ.get("BUCKET_NAME")
+
+GCR_IMAGE = os.environ.get("GCR_IMAGE")
+GCR_REGION = os.environ.get("GCR_REGION")
+GCR_MEMORY = os.environ.get("GCR_MEMORY")
+
 ##################  CONSTANTS_SOCCMATCH  #####################
 SOCCER_PROJECT = "soccer_match"
 COLUMN_NAMES_RAW = ['teamsData', 'dateutc', 'competitionId', 'seasonId', 'gameweek', 'wyId','winner']
