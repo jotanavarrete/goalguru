@@ -79,6 +79,61 @@ def get_full_season_df(competition_id, season_id, merge=True):
 
     return matches_full_df
 
+def get_past_info_per_team(match_full, team_id, actual_date, if_home, past_games=10):
+    '''
+    This function receives a match_full dataframe with actual info, the team_id
+    for which we want to compute the past info, the actual date to look into the
+    past, if_home a boolean that indicates if the actual team is home or away, and
+    the number of past games we want to compute the past info.
+    '''
+    home_cols = [feat for feat in match_full.columns if '_home' in feat]
+    away_cols = [feat for feat in match_full.columns if '_away' in feat]
+    home_or_away = home_cols if if_home else away_cols
+    all_past_cols = [feat + '_all_past' for feat in home_or_away]
+    last_cols = [feat + f'_last_{past_games}' for feat in home_or_away]
+
+    all_prev_matches_home = match_full[(match_full.match_date < actual_date) &
+                (match_full.home_id == team_id)][home_cols + ['match_date']]
+    all_prev_matches_home.columns = all_past_cols + ['match_date']
+
+    all_prev_matches_away = match_full[(match_full.match_date < actual_date) &
+                (match_full.away_id == team_id)][away_cols + ['match_date']]
+    all_prev_matches_away.columns = all_past_cols + ['match_date']
+
+    all_prev_matches = pd.concat([all_prev_matches_home, all_prev_matches_away]).sort_values('match_date')
+    last_prev_matches = all_prev_matches.tail(past_games)
+    last_prev_matches.columns = last_cols + ['match_date']
+
+    mean_all_prev = all_prev_matches.drop(columns='match_date').apply('mean', axis=0)
+    mean_last_prev = last_prev_matches.drop(columns='match_date').apply('mean', axis=0)
+    final_df = pd.concat([mean_all_prev, mean_last_prev], axis=0)
+
+    return final_df
+
+def get_past_info(match_full, match, past_games=10):
+    '''
+    Receives a full matches dataset with the actual info,
+    the match for which we want to compute the
+    mean of the features in the past for each team (home and away)
+    and 'past_games' a variable that indicates for how many past matches
+    we want to compute the average. It returns a dataframe whose first column
+    is the match id, followed by the average of the past metrics for the home
+    and away teams.
+    '''
+    # TODO: see if we want to drop this columns now or before (while processing)
+    to_drop = ['kick_off', 'competition', 'season', 'home_team', 'away_team', 'home_score', 'away_score', 'competition_stage']
+    match_full_dropped = match_full.drop(columns=to_drop)
+    match = match.drop(columns=to_drop)
+    # useful variables
+    actual_date = match['match_date']
+    home_team = match['home_id']
+    away_team = match['away_id']
+    home_last_info = get_past_info_per_team(match_full_dropped, home_team, actual_date, True, past_games)
+    away_last_info = get_past_info_per_team(match_full_dropped, away_team, actual_date, False, past_games)
+    match_complete = pd.concat([match[['match_id', 'target']], home_last_info, away_last_info], axis=0)
+    return match_complete
+
+
 
 
 if __name__ == '__main__':

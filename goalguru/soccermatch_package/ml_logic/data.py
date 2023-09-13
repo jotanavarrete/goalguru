@@ -4,6 +4,8 @@ from pathlib import Path
 
 from goalguru.soccermatch_package.params import *
 from goalguru.soccermatch_package.ml_logic import encoders, merges, features
+from unidecode import unidecode
+import json
 
 def load_data():
     """
@@ -40,7 +42,6 @@ def load_data():
         print(f'--------------------------')
         print('Working on teams...\n')
         teams = pd.read_json(os.path.join(other_directory,'teams.json'))
-
         print("✅ Data loaded: matches, events, playerrank and teams loaded\n")
         return matches, events, playerank, teams
     else:
@@ -124,8 +125,13 @@ def clean_data(matches: pd.DataFrame) -> pd.DataFrame:
     Clean raw data by
     dropping Nan values from relevant features
     """
+    def remove_accents(s):
+        return unidecode(json.loads(f'"{s}"'))
     print("------ Cleaning data ------")
     print(f'--------------------------')
+
+    matches['homeTeam'] = matches['homeTeam'].apply(remove_accents)
+    matches['awayTeam'] = matches['awayTeam'].apply(remove_accents)
     matches = matches.dropna(subset = FEATURES)
     print("✅ Data cleaned\n")
     return matches
@@ -144,27 +150,6 @@ def create_features(all_matches:pd.DataFrame) -> pd.DataFrame:
     matches = features.get_features(matches)
 
     print("✅ Features created \n")
-    return matches
-def create_features1(all_matches:pd.DataFrame) -> pd.DataFrame:
-    """
-    Create relevant features for model
-    [
-    'avgHomePassAccuLast10Games','avgHomeShotAccuLast10Games',
-    'avgAwayPassAccuLast10Games','avgAwayShotAccuLast10Games',
-    'homeWRlast10Games', 'awayWRlast10Games',
-    'homeLast10AvgRank', 'awayLast10AvgRank'
-    ]
-    Returns dataframe with features
-    """
-    matches = all_matches.copy()
-    #Get accuracy features
-    matches = features.get_performance(matches)
-    #Get matchranks features
-    matches = features.get_last_matchranks(matches)
-    #Get WR features
-    matches = features.get_wr(matches)
-
-    print("✅ Features 1 created")
     return matches
 
 def save_data(
