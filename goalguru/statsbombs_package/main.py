@@ -118,9 +118,9 @@ def pred(X_pred: pd.DataFrame = None):
     return y_pred
 
 if __name__ == '__main__':
-    # val_accu = train()
+    val_accu = train()
     # print(val_accu)
     # accu = evaluate()
     # print(accu)
-    y_pred = pred()
-    print(y_pred)
+    #y_pred = pred()
+    #print(y_pred)

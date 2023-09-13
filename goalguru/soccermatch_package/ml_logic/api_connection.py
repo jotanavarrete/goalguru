@@ -3,7 +3,8 @@ from goalguru.soccermatch_package.params import *
 from goalguru.soccermatch_package.utils import save_json, read_json
 from pathlib import Path
 import pandas as pd
-
+from io import StringIO
+from goalguru.soccermatch_package.ml_logic.preprocess import scale_x
 
 def get_competitions() -> list:
     """
@@ -129,7 +130,9 @@ def get_x_preprocessed(match_id:int = 2058017) -> pd.DataFrame:
         dataset = load_processed_data()
         features = dataset[dataset['matchId'] == match_id][FEATURES].to_json()
         save_json(features, path)
-        return features
+        X = pd.read_json(StringIO(features))
     else:
         features = read_json(path)
-        return features
+        X = pd.read_json(StringIO(features))
+    X = scale_x(X)
+    return X

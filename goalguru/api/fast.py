@@ -1,18 +1,18 @@
-# import pandas as pd
+import pandas as pd
 from goalguru.api.api_logic import *
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 ## Model from soccermatch_package
-# from goalguru.soccermatch_package.ml_logic.registry import load_model as load_model_sm
+from goalguru.soccermatch_package.ml_logic.registry import load_model as load_model_sm
 
 ## Model from statsbombs_package
-# from goalguru.statsbombs_package.registry import load_model as load_model_sb
+from goalguru.statsbombs_package.registry import load_model as load_model_sb
 
 app = FastAPI()
 
-# app.state.model_sm = load_model_sm()
-# app.state.model_sb = load_model_sb()
+app.state.model_sm = load_model_sm()
+app.state.model_sb = load_model_sb()
 
 
 # Allowing all middleware is optional, but good practice for dev purposes
@@ -50,24 +50,22 @@ def get_matches(competition_id : int, season_id : int, matchweek : int, dataset:
     return matches
 
 
-# http://127.0.0.1:8000/predict?match_id=1
+# http://127.0.0.1:8000/predict?match_id=2576335&dataset=soccermatch
 @app.get('/predict')
 def predict(match_id: int, dataset: str):
     X_preprocessed = get_X_preprocessed(match_id, dataset)
 
     # now we do the prediction, depending on the model
-    # if dataset == 'soccermatch':
-        # prediction = app.state.model_sm.predict(X_preprocessed)
-    # if dataset == 'statsbomb':
-        # prediction = app.state.model_sb.predict(X_preprocessed)
+    if dataset == 'soccermatch':
+        outcome = app.state.model_sm.predict(X_preprocessed)
+        prediction = app.state.model_sm.predict_proba(X_preprocessed)
+    if dataset == 'statsbomb':
+        outcome = app.state.model_sb.predict(X_preprocessed)
+        prediction = app.state.model_sb.predict_proba(X_preprocessed)
 
-    # we do something with the prediction (ie, determining the outcome,
-    # reversing the probabilities, obtaining the first element)
-    refactored_prediction = None  # do something with the prediction!
-    # example
     refactored_prediction = {
-        'outcome': 1,
-        'probabilities': [0.59, 0.25, 0.16]
+        'outcome': outcome.tolist()[0],
+        'probabilities': prediction.tolist()[0][::-1]
     }
     return refactored_prediction
 
