@@ -22,8 +22,8 @@ TO_SOCCERMATCH_COMPETITIONS = {
     2: 795,  # 'LaLiga'
     3: 412,  # 'Ligue 1'
     4: 426,  # 'Bundesliga'
-    6: 102,  # 'Euro Cup'
-    5: 28  # 'World Cup'
+    6: 102  # 'Euro Cup'
+    #5: 28  # 'World Cup'
 }
 # from ALL_COMPETITIONS to statsbomb dataset
 TO_STATSBOMB_COMPETITIONS = {

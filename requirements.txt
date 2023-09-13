@@ -19,6 +19,7 @@ scipy==1.10.0
 scikit-learn==1.2.1
 #google-cloud-bigquery
 google-cloud-storage
+unidecode
 #db-dtypes
 #pyarrow
 

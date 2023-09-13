@@ -45,8 +45,7 @@ def get_seasons(competition_id : int):
 
 
 # http://127.0.0.1:8000/matches?competition_id=2&season_id=181144&matchweek=2&dataset=soccermatch
-# http://127.0.0.1:8000/matches?competition_id=9&season_id=27&matchweek=1&dataset=statsbomb
-# http://127.0.0.1:8000/matches?competition_id=55&season_id=43&matchweek=1&dataset=statsbomb
+# http://127.0.0.1:8000/matches?competition_id=1&season_id=27&matchweek=1&dataset=statsbomb
 
 @app.get("/matches")
 def get_matches(competition_id : int, season_id : int, matchweek : int, dataset: str):
@@ -55,9 +54,10 @@ def get_matches(competition_id : int, season_id : int, matchweek : int, dataset:
 
 
 # http://127.0.0.1:8000/predict?match_id=2576335&dataset=soccermatch
+# http://127.0.0.1:8000/predict?match_id=3878548&dataset=statsbomb
 @app.get('/predict')
 def predict(match_id: int, dataset: str):
-    X_preprocessed = pd.read_json(get_X_preprocessed(match_id, dataset))
+    X_preprocessed = get_X_preprocessed(match_id, dataset)
 
     # now we do the prediction, depending on the model
     if dataset == 'soccermatch':
@@ -72,10 +72,3 @@ def predict(match_id: int, dataset: str):
         'probabilities': prediction.tolist()[0][::-1]
     }
     return refactored_prediction
-
-
-# http://127.0.0.1:8000/results?match_id=1
-@app.get("/results")
-def get_results(match_id : int):
-    results = get_all_results(match_id)
-    return results

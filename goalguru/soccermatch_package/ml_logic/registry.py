@@ -47,6 +47,7 @@ def save_model(model: GridSearchCV = None) -> None:
 
     print("✅ Model saved locally")
 
+    """
     if MODEL_TARGET == "gcs":
     # 🎁 We give you this piece of code as a gift. Please read it carefully! Add a breakpoint if needed!
 
@@ -59,7 +60,7 @@ def save_model(model: GridSearchCV = None) -> None:
         print("✅ Model saved to GCS")
 
         return None
-
+    """
     return None
 
 def load_model()-> GridSearchCV:
