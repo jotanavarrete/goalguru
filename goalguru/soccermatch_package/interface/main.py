@@ -143,13 +143,12 @@ def pred(X_pred: pd.DataFrame = None) -> np.ndarray:
 
     if X_pred is None:
         print('❌ X not valid: showing case example')
-        X_pred = pd.read_json(StringIO(get_x_preprocessed(2058013)))
+        X_pred = get_x_preprocessed(2058013)
 
     model = load_model()
     assert model is not None
 
-    X_processed = scale_x(X_pred)
-    y_pred = model.predict_proba(X_processed)
+    y_pred = model.predict_proba(X_pred)
 
     print(Fore.BLUE + f"Getting prediction..." + Style.RESET_ALL)
     print("✅ prediction done: ", y_pred, "\n")

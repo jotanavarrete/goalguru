@@ -61,7 +61,7 @@ def load_model()-> GridSearchCV:
 
     most_recent_model_path_on_disk = sorted(local_model_paths)[-1]
 
-    print(Fore.BLUE + f"Load latest model from disk..." + Style.RESET_ALL)
+    print(Fore.BLUE + f"Load latest soccer-match model from disk..." + Style.RESET_ALL)
 
     with open(most_recent_model_path_on_disk, 'rb') as file:
         latest_model = pickle.load(file)
