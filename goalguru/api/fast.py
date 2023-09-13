@@ -70,10 +70,3 @@ def predict(match_id: int, dataset: str):
         'probabilities': probs.tolist()[0][::-1] #[0.59, 0.25, 0.16]
     }
     return refactored_prediction
-
-
-# http://127.0.0.1:8000/results?match_id=1
-@app.get("/results")
-def get_results(match_id : int):
-    results = get_all_results(match_id)
-    return results
