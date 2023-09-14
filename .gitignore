@@ -11,6 +11,7 @@ training_outputs/
 __pycache__/
 .env
 .direnv/
+.env*
 
 # IDE #
 .vscode/
