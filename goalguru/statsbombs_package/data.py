@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+
 from goalguru.statsbombs_package.params import *
 
 def valid_competitions():

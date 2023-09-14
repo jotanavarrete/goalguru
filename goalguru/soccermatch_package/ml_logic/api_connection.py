@@ -75,22 +75,19 @@ def get_seasons(competition_id:int) ->list:
         s = read_json(path)
         return s
 
+
 def get_matches(competition_id : int,
                 season_id : int,
                 matchweek : int) -> list:
-
     """
     Retrieves matches lists from processed dataset given a competition id,
     season_id and matchweek
     If file containing the matches list for the competition, season and
     matchweek already exists it retrieves it from the cache path,
     if not it creates it
-
     Returns list of dictionary with keys ['match_id'], ['name'],
     ['home_team'] and ['away_team']
-
     """
-
     path = Path(API_DATA_PATH).joinpath(SOCCER_PROJECT, f'matches_{competition_id}_{season_id}_{matchweek}.json')
     if not path.is_file():
         dataset = load_processed_data()
@@ -98,7 +95,6 @@ def get_matches(competition_id : int,
         condition_season = dataset['seasonId'] == season_id
         condition_matchweek = dataset['gameweek'] == matchweek
         condition = condition_comp & condition_season & condition_matchweek
-
         matches_filt = dataset[condition]
         match_l = []
         for index, row in matches_filt.iterrows():

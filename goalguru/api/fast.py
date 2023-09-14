@@ -36,14 +36,17 @@ def get_competitions():
     return competitions
 
 
-# http://127.0.0.1:8000/seasons?competition_id=102
+# competition_id=[0,10]
+# http://127.0.0.1:8000/seasons?competition_id=5
 @app.get("/seasons")
 def get_seasons(competition_id : int):
     seasons = get_all_seasons(competition_id)
     return seasons
 
 
-# http://127.0.0.1:8000/matches?competition_id=102&season_id=9291&matchweek=0&dataset=soccermatch
+# http://127.0.0.1:8000/matches?competition_id=2&season_id=181144&matchweek=2&dataset=soccermatch
+# http://127.0.0.1:8000/matches?competition_id=1&season_id=27&matchweek=1&dataset=statsbomb
+
 @app.get("/matches")
 def get_matches(competition_id : int, season_id : int, matchweek : int, dataset: str):
     matches = get_all_matches(competition_id, season_id, matchweek, dataset)
@@ -51,6 +54,7 @@ def get_matches(competition_id : int, season_id : int, matchweek : int, dataset:
 
 
 # http://127.0.0.1:8000/predict?match_id=2576335&dataset=soccermatch
+# http://127.0.0.1:8000/predict?match_id=3878548&dataset=statsbomb
 @app.get('/predict')
 def predict(match_id: int, dataset: str):
     X_preprocessed = get_X_preprocessed(match_id, dataset)
@@ -68,10 +72,3 @@ def predict(match_id: int, dataset: str):
         'probabilities': prediction.tolist()[0][::-1]
     }
     return refactored_prediction
-
-
-# http://127.0.0.1:8000/results?match_id=1
-@app.get("/results")
-def get_results(match_id : int):
-    results = get_all_results(match_id)
-    return results
